@@ -1,6 +1,6 @@
 ---
-title: "Readme"
-author: "Falkosc223, Dashbloxx"
+File: "README.md"
+Author: "Falkosc223, Dashbloxx"
 ---
 # Cobalt
 ## What is Cobalt?
