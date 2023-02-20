@@ -1,0 +1,11 @@
+.cproject
+.directory
+.metadata/
+.project
+.settings/
+RemoteSystemsTempFiles/
+
+build/
+ports/
+sysroot/
+*.iso

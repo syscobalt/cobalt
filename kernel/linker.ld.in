@@ -1,0 +1,97 @@
+/* Copyright (c) 2016, 2017, 2019, 2020, 2021, 2022 Dennis Wölfing
+ *
+ * Permission to use, copy, modify, and/or distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+ * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+ * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+ * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+ * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+ * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+ * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+ */
+
+/* kernel/linker.ld.in
+ * Linker script that tells how the kernel will be loaded into memory.
+ */
+
+#include <cobalt/kernel/arch.h>
+
+ENTRY(_start);
+
+SECTIONS {
+    . = KERNEL_PHYSICAL;
+
+    bootstrapBegin = .;
+
+    bootstrap_text : {
+        *(multiboot)
+        *(bootstrap_text)
+    }
+    bootstrap_rodata : {
+        *(bootstrap_rodata)
+        . = ALIGN(4096);
+    }
+
+    bootstrap_bss ALIGN(4096) : {
+        *(bootstrap_bss)
+        . = ALIGN(4096);
+    }
+
+    bootstrapEnd = .;
+    numBootstrapPages = (bootstrapEnd - bootstrapBegin) / 0x1000;
+
+    . += KERNEL_VIRTUAL;
+
+    kernelVirtualBegin = ALIGN(4096);
+    kernelPhysicalBegin = kernelVirtualBegin - KERNEL_VIRTUAL;
+
+    .text : AT(ADDR(.text) - KERNEL_VIRTUAL) {
+        *(.text.unlikely)
+        *(.text.exit)
+        *(.text.startup)
+        *(.text*)
+    }
+
+    kernelExecEnd = ALIGN(4096);
+    numExecPages = (kernelExecEnd - kernelVirtualBegin) / 0x1000;
+
+    .rodata ALIGN(4096) : AT(ADDR(.rodata) - KERNEL_VIRTUAL) {
+        *(.rodata*)
+        . = ALIGN(4096);
+    }
+
+    kernelReadOnlyEnd = .;
+    numReadOnlyPages = (kernelReadOnlyEnd - kernelVirtualBegin) / 0x1000;
+
+    .data ALIGN(4096) : AT(ADDR(.data) - KERNEL_VIRTUAL) {
+        *(.data)
+    }
+
+    .init_array : AT(ADDR(.init_array) - KERNEL_VIRTUAL) {
+        __init_array_start = .;
+        KEEP(*(SORT_BY_INIT_PRIORITY(.init_array.*)))
+        KEEP(*(.init_array))
+        __init_array_end = .;
+    }
+
+    .fini_array : AT(ADDR(.fini_array) - KERNEL_VIRTUAL) {
+        __fini_array_start = .;
+        KEEP(*(SORT_BY_INIT_PRIORITY(.fini_array.*)))
+        KEEP(*(.fini_array))
+        __fini_array_end = .;
+    }
+
+    .bss ALIGN(4096) : AT(ADDR(.bss) - KERNEL_VIRTUAL) {
+        *(.bss)
+        . = ALIGN(4096);
+    }
+
+    kernelVirtualEnd = .;
+    kernelPhysicalEnd = kernelVirtualEnd - KERNEL_VIRTUAL;
+    numWritablePages = (kernelVirtualEnd - kernelReadOnlyEnd) / 0x1000;
+
+    ASSERT(kernelPhysicalEnd <= 0x400000, "kernel too big")
+}
