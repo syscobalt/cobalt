@@ -1,3 +1,7 @@
+---
+title: "Readme"
+author: "Falkosc223, Dashbloxx"
+---
 # Cobalt
 ## What is Cobalt?
 Cobalt is a UNIX-like operating system that is designed for speed, and compability. Cobalt is nearly compatible with most programs made for UNIX-like systems. Cobalt contains code from Dennix & Sortix.
@@ -12,12 +16,11 @@ make distclean
 make all
 ```
 The first line will clean the root filesystem model, and delete the `.iso` file. The second line builds Cobalt from source.
-Later if you want to test Cobalt, just run:
+## Testing Cobalt
+Cobalt currently supports only two architectures, which are i386, and x86_64. When Cobalt is built for one of these architectures you can test them using QEMU:
 ```
 qemu-system-x86_64 -cdrom cobalt.iso
 ```
-If you're using linux on a x86_64 machine, you can run:
-```
-qemu-system-x86_64 -accel kvm -cdrom cobalt.iso
-```
-This will test Cobalt a bit faster.
+This will get QEMU to test out the CDROM image of Cobalt that was built.
+## Contributing
+For guidelines on contributing, see [this](CONTRIBUTING.md) page.
