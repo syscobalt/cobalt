@@ -4,7 +4,7 @@ Author: "Falkosc223, Dashbloxx"
 ---
 # Cobalt
 ## What is Cobalt?
-Cobalt is a UNIX-like operating system that is designed for speed, and compability. Cobalt is nearly compatible with most programs made for UNIX-like systems. Cobalt contains code from Dennix & Sortix.
+Cobalt is a UNIX-like operating system that is designed for speed, and compability. Cobalt is nearly compatible with most programs made for UNIX-like systems. Cobalt contains code from Cobalt & Sortix.
 ## How can I build Cobalt?
 To build Cobalt, you will need to build the toolchain first. Start by running the command:
 ```
@@ -24,3 +24,5 @@ qemu-system-x86_64 -cdrom cobalt.iso
 This will get QEMU to test out the CDROM image of Cobalt that was built.
 ## Contributing
 For guidelines on contributing, see [this](CONTRIBUTING.md) page.
+## Ports
+See the [ports repository](https://github.com/syscobalt/cobalt-ports). This repository contains ported software and user-made applications that should be optional to install on Cobalt.
