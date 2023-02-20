@@ -17,8 +17,8 @@
  * Memory management.
  */
 
-#ifndef _DENNIX_MMAN_H
-#define _DENNIX_MMAN_H
+#ifndef _COBALT_MMAN_H
+#define _COBALT_MMAN_H
 
 #define PROT_READ (1 << 0)
 #define PROT_WRITE (1 << 1)

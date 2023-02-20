@@ -23,7 +23,7 @@
 #include <sys/cdefs.h>
 #define __need_size_t
 #include <bits/types.h>
-#if __USE_DENNIX
+#if __USE_COBALT
 #  include <cobalt/devctls.h>
 #endif
 

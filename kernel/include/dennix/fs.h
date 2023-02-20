@@ -17,8 +17,8 @@
  * Filesystem operations.
  */
 
-#ifndef _DENNIX_FS_H
-#define _DENNIX_FS_H
+#ifndef _COBALT_FS_H
+#define _COBALT_FS_H
 
 #define MOUNT_READONLY (1 << 0)
 

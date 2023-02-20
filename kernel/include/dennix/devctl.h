@@ -17,8 +17,8 @@
  * Device Control.
  */
 
-#ifndef _DENNIX_DEVCTL_H
-#define _DENNIX_DEVCTL_H
+#ifndef _COBALT_DEVCTL_H
+#define _COBALT_DEVCTL_H
 
 /* For the posix_devctl() function, data is always passed as pointer and size.
    The ioctl() funtion however can accept different types. Therefore each devctl

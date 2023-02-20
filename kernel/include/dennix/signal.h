@@ -17,8 +17,8 @@
  * Signals.
  */
 
-#ifndef _DENNIX_SIGNAL_H
-#define _DENNIX_SIGNAL_H
+#ifndef _COBALT_SIGNAL_H
+#define _COBALT_SIGNAL_H
 
 /* These signal numbers are commonly used by applications. POSIX specifies
    these numbers in the kill(1) utility as part of the XSI option. */

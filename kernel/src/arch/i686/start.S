@@ -108,7 +108,7 @@ unsupportedCpu:
 
 .section bootstrap_rodata, "a"
 errorMsg:
-    .asciz "Dennix requires a CPU with SSE support."
+    .asciz "Cobalt requires a CPU with SSE support."
 
 .section bootstrap_bss, "aw", @nobits
 .align 4096

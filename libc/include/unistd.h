@@ -31,7 +31,7 @@
 #include <bits/types.h>
 #include <cobalt/conf.h>
 #include <cobalt/seek.h>
-#if __USE_DENNIX
+#if __USE_COBALT
 #  include <cobalt/fork.h>
 #  include <cobalt/meminfo.h>
 #  include <cobalt/oflags.h>
@@ -280,7 +280,7 @@ int unlink(const char*);
 int unlinkat(int, const char*, int);
 ssize_t write(int, const void*, size_t);
 
-#if __USE_DENNIX
+#if __USE_COBALT
 typedef unsigned long useconds_t;
 int dup3(int, int, int);
 int fchdirat(int, const char*);

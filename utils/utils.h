@@ -24,8 +24,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifndef DENNIX_VERSION
-#  define DENNIX_VERSION ""
+#ifndef COBALT_VERSION
+#  define COBALT_VERSION ""
 #endif
 
 #define UNUSED __attribute__((unused))
@@ -46,7 +46,7 @@ static UNUSED int help(const char* argv0, const char* helpstr) {
 }
 
 static UNUSED int version(const char* argv0) {
-    printf("%s (Dennix) %s\n", argv0, DENNIX_VERSION);
+    printf("%s (Cobalt) %s\n", argv0, COBALT_VERSION);
     return 0;
 }
 

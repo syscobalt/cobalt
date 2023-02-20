@@ -22,7 +22,7 @@
 
 #include <sys/cdefs.h>
 #define __need_NULL
-#if __USE_DENNIX || __USE_POSIX
+#if __USE_COBALT || __USE_POSIX
 #  define __need_locale_t
 #endif
 #include <bits/types.h>

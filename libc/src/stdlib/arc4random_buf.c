@@ -101,7 +101,7 @@ void __arc4random_buf(void* result, size_t size) {
 
     static pid_t pid = 0;
     if (pid != getpid()) {
-        // TODO: This is not reliable because pids are reused in Dennix.
+        // TODO: This is not reliable because pids are reused in Cobalt.
         pid = getpid();
         state[0] = 0;
     }

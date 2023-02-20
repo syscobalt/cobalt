@@ -35,7 +35,7 @@ extern __thread int errno;
 #  define errno errno
 #endif
 
-#if __USE_DENNIX
+#if __USE_COBALT
 extern char* program_invocation_name;
 extern char* program_invocation_short_name;
 #endif

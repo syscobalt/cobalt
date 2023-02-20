@@ -17,8 +17,8 @@
  * Thread structure.
  */
 
-#ifndef _DENNIX_UTHREAD_H
-#define _DENNIX_UTHREAD_H
+#ifndef _COBALT_UTHREAD_H
+#define _COBALT_UTHREAD_H
 
 #include <cobalt/types.h>
 

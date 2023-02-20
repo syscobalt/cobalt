@@ -17,8 +17,8 @@
  * Syscall numbers.
  */
 
-#ifndef _DENNIX_SYSCALL_H
-#define _DENNIX_SYSCALL_H
+#ifndef _COBALT_SYSCALL_H
+#define _COBALT_SYSCALL_H
 
 #define SYSCALL_EXIT_THREAD 0
 #define SYSCALL_WRITE 1

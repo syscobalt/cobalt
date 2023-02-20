@@ -17,8 +17,8 @@
  * Signal info.
  */
 
-#ifndef _DENNIX_SIGINFO_H
-#define _DENNIX_SIGINFO_H
+#ifndef _COBALT_SIGINFO_H
+#define _COBALT_SIGINFO_H
 
 #include <cobalt/types.h>
 

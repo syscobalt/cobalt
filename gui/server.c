@@ -119,7 +119,7 @@ void initializeServer(void) {
 
     snprintf(addr.sun_path, sizeof(addr.sun_path), "/run/gui-%jd",
             (intmax_t) getpid());
-    setenv("DENNIX_GUI_SOCKET", addr.sun_path, 1);
+    setenv("COBALT_GUI_SOCKET", addr.sun_path, 1);
     unlink(addr.sun_path);
     if (bind(serverFd, (struct sockaddr*) &addr, sizeof(addr)) < 0) {
         dxui_panic(context, "bind");
@@ -172,5 +172,5 @@ void pollEvents(void) {
 }
 
 static void unlinkSocket(void) {
-    unlink(getenv("DENNIX_GUI_SOCKET"));
+    unlink(getenv("COBALT_GUI_SOCKET"));
 }

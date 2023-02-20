@@ -28,13 +28,13 @@
 #define __need_NULL
 #define __need_off_t
 #define __need_size_t
-#if __USE_DENNIX || __USE_POSIX
+#if __USE_COBALT || __USE_POSIX
 #  define __need_ssize_t
 #endif
 #include <bits/types.h>
 #include <cobalt/seek.h>
 
-#if __USE_POSIX || __USE_DENNIX
+#if __USE_POSIX || __USE_COBALT
 /* POSIX requires us to define va_list but <stdarg.h> does not allow us to
    request only va_list. */
 #  ifndef _VA_LIST_DEFINED
@@ -104,7 +104,7 @@ int vprintf(const char* __restrict, __gnuc_va_list) __printf_like(1, 0);
 int vsprintf(char* __restrict, const char* __restrict, __gnuc_va_list)
         __printf_like(2, 0);
 
-#if __USE_C >= 1999 || __USE_DENNIX
+#if __USE_C >= 1999 || __USE_COBALT
 int snprintf(char* __restrict, size_t, const char* __restrict, ...)
         __printf_like(3, 4);
 int vfscanf(FILE* __restrict, const char* __restrict, __gnuc_va_list)
@@ -116,7 +116,7 @@ int vsscanf(const char* __restrict, const char* __restrict, __gnuc_va_list)
         __scanf_like(2, 0);
 #endif
 
-#if __USE_DENNIX || __USE_POSIX
+#if __USE_COBALT || __USE_POSIX
 int dprintf(int, const char* __restrict, ...) __printf_like(2, 3);
 FILE* fdopen(int, const char*);
 int fileno(FILE*);
@@ -137,7 +137,7 @@ int renameat(int, const char*, int, const char*);
 int vdprintf(int, const char* __restrict, __gnuc_va_list) __printf_like(2, 0);
 #endif
 
-#if __USE_DENNIX
+#if __USE_COBALT
 int asprintf(char** __restrict, const char* __restrict, ...)
         __printf_like(2, 3);
 void clearerr_unlocked(FILE*);

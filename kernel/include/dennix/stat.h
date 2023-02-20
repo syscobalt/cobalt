@@ -17,8 +17,8 @@
  * File information.
  */
 
-#ifndef _DENNIX_STAT_H
-#define _DENNIX_STAT_H
+#ifndef _COBALT_STAT_H
+#define _COBALT_STAT_H
 
 #include <cobalt/timespec.h>
 #include <cobalt/types.h>

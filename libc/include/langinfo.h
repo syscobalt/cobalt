@@ -78,7 +78,7 @@ typedef int nl_item;
 #define ABMON_10 141
 #define ABMON_11 142
 #define ABMON_12 143
-#if __USE_DENNIX
+#if __USE_COBALT
 #define ALTMON_1 144
 #define ALTMON_2 145
 #define ALTMON_3 146

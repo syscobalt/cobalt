@@ -17,8 +17,8 @@
  * Display.
  */
 
-#ifndef _DENNIX_DISPLAY_H
-#define _DENNIX_DISPLAY_H
+#ifndef _COBALT_DISPLAY_H
+#define _COBALT_DISPLAY_H
 
 #include <stddef.h>
 #include <cobalt/devctl.h>

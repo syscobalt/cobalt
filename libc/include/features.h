@@ -28,7 +28,7 @@
     !defined(_ISOC11_SOURCE) && \
     !defined(_POSIX_SOURCE) && \
     !defined(_POSIX_C_SOURCE) && \
-    !defined(_DENNIX_SOURCE) && \
+    !defined(_COBALT_SOURCE) && \
     !defined(_ALL_SOURCE) && \
     !defined(_DEFAULT_SOURCE)
 #  define _DEFAULT_SOURCE 1
@@ -41,13 +41,13 @@
 #  if !defined(_POSIX_C_SOURCE)
 #    define _POSIX_C_SOURCE 200809L
 #  endif
-#  if !defined(_DENNIX_SOURCE)
-#    define _DENNIX_SOURCE 1
+#  if !defined(_COBALT_SOURCE)
+#    define _COBALT_SOURCE 1
 #  endif
 #endif
 
-#if defined(_DEFAULT_SOURCE) && !defined(_DENNIX_SOURCE)
-#  define _DENNIX_SOURCE 1
+#if defined(_DEFAULT_SOURCE) && !defined(_COBALT_SOURCE)
+#  define _COBALT_SOURCE 1
 #endif
 
 #if defined(_ISOC11_SOURCE)
@@ -93,10 +93,10 @@
 #  define __USE_C 1999
 #endif
 
-#if defined(_DENNIX_SOURCE)
-#  define __USE_DENNIX 1
+#if defined(_COBALT_SOURCE)
+#  define __USE_COBALT 1
 #else
-#  define __USE_DENNIX 0
+#  define __USE_COBALT 0
 #endif
 
 #endif

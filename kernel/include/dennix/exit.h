@@ -17,8 +17,8 @@
  * Exiting.
  */
 
-#ifndef _DENNIX_EXIT_H
-#define _DENNIX_EXIT_H
+#ifndef _COBALT_EXIT_H
+#define _COBALT_EXIT_H
 
 struct exit_thread {
     int flags;

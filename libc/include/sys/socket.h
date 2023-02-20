@@ -38,7 +38,7 @@ int connect(int, const struct sockaddr*, socklen_t);
 int listen(int, int);
 int socket(int, int, int);
 
-#if __USE_DENNIX
+#if __USE_COBALT
 int accept4(int, struct sockaddr* __restrict, socklen_t* __restrict, int);
 #endif
 

@@ -17,8 +17,8 @@
  * Sockets.
  */
 
-#ifndef _DENNIX_SOCKET_H
-#define _DENNIX_SOCKET_H
+#ifndef _COBALT_SOCKET_H
+#define _COBALT_SOCKET_H
 
 #include <cobalt/types.h>
 

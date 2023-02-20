@@ -17,8 +17,8 @@
  * Data types.
  */
 
-#ifndef _DENNIX_TYPES_H
-#define _DENNIX_TYPES_H
+#ifndef _COBALT_TYPES_H
+#define _COBALT_TYPES_H
 
 typedef __INTMAX_TYPE__ __blkcnt_t;
 typedef long __blksize_t;

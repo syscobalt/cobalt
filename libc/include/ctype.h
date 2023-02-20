@@ -21,7 +21,7 @@
 #define _CTYPE_H
 
 #include <sys/cdefs.h>
-#if __USE_DENNIX || __USE_POSIX
+#if __USE_COBALT || __USE_POSIX
 #  define __need_locale_t
 #  include <bits/types.h>
 #endif
@@ -30,7 +30,7 @@
 extern "C" {
 #endif
 
-#if __USE_C >= 1999 || __USE_DENNIX
+#if __USE_C >= 1999 || __USE_COBALT
 extern __gnu_inline int isblank(int _c) {
     return _c == '\t' || _c == ' ';
 }

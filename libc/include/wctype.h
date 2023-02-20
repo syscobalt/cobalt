@@ -22,7 +22,7 @@
 
 #include <sys/cdefs.h>
 #define __need_wint_t
-#if __USE_DENNIX || __USE_POSIX
+#if __USE_COBALT || __USE_POSIX
 #  define __need_locale_t
 #endif
 #include <bits/types.h>
@@ -56,7 +56,7 @@ wint_t towupper(wint_t);
 wctrans_t wctrans(const char*);
 wctype_t wctype(const char*);
 
-#if __USE_DENNIX || __USE_C >= 1999
+#if __USE_COBALT || __USE_C >= 1999
 int iswblank(wint_t);
 #endif
 

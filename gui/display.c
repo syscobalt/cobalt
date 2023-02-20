@@ -114,7 +114,7 @@ void handleResize(dxui_window* window, dxui_resize_event* event) {
 void initializeDisplay(void) {
     const char* text1 = "Press GUI key + T to open a terminal.";
     const char* text2 = "Press GUI key + Q to quit the compositor.";
-    const char* text3 = "Dennix " DENNIX_VERSION;
+    const char* text3 = "Cobalt " COBALT_VERSION;
 
     dxui_rect rect = {0};
     rect = dxui_get_text_rect(text1, rect, 0);

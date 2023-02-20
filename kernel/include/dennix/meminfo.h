@@ -17,8 +17,8 @@
  * Memory information.
  */
 
-#ifndef _DENNIX_MEMINFO_H
-#define _DENNIX_MEMINFO_H
+#ifndef _COBALT_MEMINFO_H
+#define _COBALT_MEMINFO_H
 
 struct meminfo {
     __SIZE_TYPE__ mem_total;

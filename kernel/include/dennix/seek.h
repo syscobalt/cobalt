@@ -17,8 +17,8 @@
  * File position.
  */
 
-#ifndef _DENNIX_SEEK_H
-#define _DENNIX_SEEK_H
+#ifndef _COBALT_SEEK_H
+#define _COBALT_SEEK_H
 
 #define SEEK_SET 1
 #define SEEK_CUR 2

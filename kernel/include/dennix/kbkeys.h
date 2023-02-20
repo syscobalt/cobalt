@@ -17,8 +17,8 @@
  * Keyboard key codes.
  */
 
-#ifndef _DENNIX_KBKEYS_H
-#define _DENNIX_KBKEYS_H
+#ifndef _COBALT_KBKEYS_H
+#define _COBALT_KBKEYS_H
 
 #include <stddef.h>
 

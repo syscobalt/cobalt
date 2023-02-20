@@ -81,7 +81,7 @@ dxui_dim dxui_get_display_dim(dxui_context* context) {
 
 dxui_context* dxui_initialize(int flags) {
     dxui_context* context;
-    const char* socketPath = getenv("DENNIX_GUI_SOCKET");
+    const char* socketPath = getenv("COBALT_GUI_SOCKET");
     if (socketPath) {
         context = initializeWithCompositor(flags, socketPath);
     } else {

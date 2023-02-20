@@ -17,8 +17,8 @@
  * Implementation limits.
  */
 
-#ifndef _DENNIX_LIMITS_H
-#define _DENNIX_LIMITS_H
+#ifndef _COBALT_LIMITS_H
+#define _COBALT_LIMITS_H
 
 #define FILESIZEBITS 64
 #define _GETENTROPY_MAX 256

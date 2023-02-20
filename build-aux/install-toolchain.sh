@@ -30,8 +30,8 @@ SYSROOT: The system root containing the system headers.
 
 set -e
 
-binutils_repo=https://github.com/dennis95/cobalt-binutils.git
-gcc_repo=https://github.com/dennis95/cobalt-gcc.git
+binutils_repo=https://github.com/syscobalt/cobalt-binutils.git
+gcc_repo=https://github.com/syscobalt/cobalt-gcc.git
 
 ([ "$1" = "--help" ] || [ "$1" = "-?" ]) && echo "$help" && exit
 

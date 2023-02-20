@@ -17,8 +17,8 @@
  * File control.
  */
 
-#ifndef _DENNIX_FCNTL_H
-#define _DENNIX_FCNTL_H
+#ifndef _COBALT_FCNTL_H
+#define _COBALT_FCNTL_H
 
 #define AT_FDCWD (-1)
 

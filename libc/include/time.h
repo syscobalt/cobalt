@@ -25,16 +25,16 @@
 #define __need_NULL
 #define __need_size_t
 #define __need_time_t
-#if __USE_DENNIX || __USE_POSIX
+#if __USE_COBALT || __USE_POSIX
 #  define __need_clockid_t
 #  define __need_locale_t
 #  define __need_timer_t
 #endif
 #include <bits/types.h>
-#if __USE_DENNIX || __USE_POSIX
+#if __USE_COBALT || __USE_POSIX
 #  include <cobalt/clock.h>
 #endif
-#if __USE_DENNIX || __USE_POSIX || __USE_C >= 2011
+#if __USE_COBALT || __USE_POSIX || __USE_C >= 2011
 #  include <cobalt/timespec.h>
 #endif
 
@@ -67,7 +67,7 @@ size_t strftime(char* __restrict, size_t, const char* __restrict,
         const struct tm* __restrict);
 time_t time(time_t*);
 
-#if __USE_DENNIX || __USE_POSIX
+#if __USE_COBALT || __USE_POSIX
 extern int daylight;
 extern long timezone;
 extern char* tzname[2];
@@ -79,7 +79,7 @@ int nanosleep(const struct timespec*, struct timespec*);
 void tzset(void);
 #endif
 
-#if __USE_DENNIX
+#if __USE_COBALT
 extern long altzone;
 
 time_t timegm(struct tm*);

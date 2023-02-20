@@ -26,7 +26,7 @@
 #define __need_size_t
 #define __need_ssize_t
 #include <bits/types.h>
-#if __USE_DENNIX
+#if __USE_COBALT
 #  include <cobalt/dent.h>
 #endif
 
@@ -66,7 +66,7 @@ void rewinddir(DIR*);
 int scandir(const char*, struct dirent***, int (*)(const struct dirent*),
         int (*)(const struct dirent**, const struct dirent**));
 
-#if __USE_DENNIX
+#if __USE_COBALT
 #  define IFTODT(mode) _IFTODT(mode)
 #  define DTTOIF(type) _DTTOIF(type)
 

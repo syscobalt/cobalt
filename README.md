@@ -1,6 +1,6 @@
-# Dennix
+# Cobalt
 
-Dennix is a unix-like hobbyist operating system for x86 and x86_64 that has
+Cobalt is a unix-like hobbyist operating system for x86 and x86_64 that has
 been in development by a single developer since 2016. Exciting features
 include:
 
@@ -16,7 +16,7 @@ include:
 
 ## Building
 
-To build Dennix you will first need to install a cross toolchain for Dennix.
+To build Cobalt you will first need to install a cross toolchain for Cobalt.
 The command `make install-toolchain` will download, build and install the
 toolchain. The installation script can be configured using environment
 variables. You can use the command `./build-aux/install-toolchain.sh --help`
@@ -38,7 +38,7 @@ does not need to download any additional files.
 
 ## License
 
-Dennix is free software and is licensed under the terms of the ISC license. The
+Cobalt is free software and is licensed under the terms of the ISC license. The
 full license terms can be found in the `LICENSE` file. The math library (libm)
 code was adopted from musl and is licensed under the MIT license and other
 permissive licenses compatible to the ISC license. See the `libm/COPYRIGHT`

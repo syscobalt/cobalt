@@ -17,8 +17,8 @@
  * Terminal I/O.
  */
 
-#ifndef _DENNIX_TERMIOS_H
-#define _DENNIX_TERMIOS_H
+#ifndef _COBALT_TERMIOS_H
+#define _COBALT_TERMIOS_H
 
 /* Not all of the following modes are actually implemented. Many of them only
    make sense for terminals connected over a serial line and have no useful

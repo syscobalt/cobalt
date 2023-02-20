@@ -14,7 +14,7 @@
  */
 
 /* libdxui/include/dxui.h
- * The Dennix User Interface library.
+ * The Cobalt User Interface library.
  */
 
 #ifndef _DXUI_H

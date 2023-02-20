@@ -17,8 +17,8 @@
  * Declarations for rfork() and regfork().
  */
 
-#ifndef _DENNIX_FORK_H
-#define _DENNIX_FORK_H
+#ifndef _COBALT_FORK_H
+#define _COBALT_FORK_H
 
 #include <cobalt/registers.h>
 

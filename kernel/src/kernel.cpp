@@ -37,8 +37,8 @@
 #include <cobalt/kernel/rtc.h>
 #include <cobalt/kernel/worker.h>
 
-#ifndef DENNIX_VERSION
-#  define DENNIX_VERSION ""
+#ifndef COBALT_VERSION
+#  define COBALT_VERSION ""
 #endif
 
 static void startInitProcess(void* param);
@@ -67,7 +67,7 @@ extern "C" void kmain(uint32_t /*magic*/, paddr_t multibootAddress) {
     PhysicalMemory::initialize(multiboot);
 
     Log::initialize();
-    Log::printf("Welcome to Dennix " DENNIX_VERSION "\n");
+    Log::printf("Welcome to Cobalt " COBALT_VERSION "\n");
     Interrupts::initPic();
     Acpi::initialize(multiboot);
 

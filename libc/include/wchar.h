@@ -27,7 +27,7 @@
 #define __need_size_t
 #define __need_wchar_t
 #define __need_wint_t
-#if __USE_DENNIX || __USE_POSIX
+#if __USE_COBALT || __USE_POSIX
 #  define __need_FILE
 #endif
 #include <bits/types.h>
@@ -36,7 +36,7 @@
 extern "C" {
 #endif
 
-#if __USE_POSIX || __USE_DENNIX
+#if __USE_POSIX || __USE_COBALT
 /* POSIX requires us to define va_list but <stdarg.h> does not allow us to
    request only va_list. */
 #  ifndef _VA_LIST_DEFINED
@@ -76,7 +76,7 @@ int wctob(wint_t);
 wchar_t* wmemchr(const wchar_t*, wchar_t, size_t);
 wchar_t* wmemcpy(wchar_t* __restrict, const wchar_t* __restrict, size_t);
 
-#if __USE_DENNIX || __USE_POSIX
+#if __USE_COBALT || __USE_POSIX
 int wcwidth(wchar_t);
 #endif
 

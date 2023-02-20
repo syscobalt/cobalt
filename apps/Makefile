@@ -22,7 +22,7 @@ BUILD = $(BUILD_DIR)/apps
 
 CFLAGS ?= -O2 -g
 CFLAGS += --sysroot=$(SYSROOT) -std=c11 -fstack-protector-strong -Wall -Wextra
-CPPFLAGS += -D_DENNIX_SOURCE
+CPPFLAGS += -D_COBALT_SOURCE
 LIBS = -ldxui
 
 APPS = \

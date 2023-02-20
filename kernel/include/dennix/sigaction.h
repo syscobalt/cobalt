@@ -17,8 +17,8 @@
  * sigaction structure.
  */
 
-#ifndef _DENNIX_SIGACTION_H
-#define _DENNIX_SIGACTION_H
+#ifndef _COBALT_SIGACTION_H
+#define _COBALT_SIGACTION_H
 
 #include <cobalt/siginfo.h>
 #include <cobalt/sigset.h>

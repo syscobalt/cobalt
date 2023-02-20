@@ -17,8 +17,8 @@
  * timespec structure.
  */
 
-#ifndef _DENNIX_TIMESPEC_H
-#define _DENNIX_TIMESPEC_H
+#ifndef _COBALT_TIMESPEC_H
+#define _COBALT_TIMESPEC_H
 
 #include <cobalt/types.h>
 

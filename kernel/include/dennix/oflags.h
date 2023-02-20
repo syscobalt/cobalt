@@ -17,8 +17,8 @@
  * File open flags.
  */
 
-#ifndef _DENNIX_OFLAGS_H
-#define _DENNIX_OFLAGS_H
+#ifndef _COBALT_OFLAGS_H
+#define _COBALT_OFLAGS_H
 
 #define O_EXEC (1 << 0)
 #define O_RDONLY (1 << 1)

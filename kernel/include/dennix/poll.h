@@ -17,8 +17,8 @@
  * Polling files.
  */
 
-#ifndef _DENNIX_POLL_H
-#define _DENNIX_POLL_H
+#ifndef _COBALT_POLL_H
+#define _COBALT_POLL_H
 
 struct pollfd {
     int fd;

@@ -17,8 +17,8 @@
  * Definitions for confstr(), sysconf(), ...
  */
 
-#ifndef _DENNIX_CONF_H
-#define _DENNIX_CONF_H
+#ifndef _COBALT_CONF_H
+#define _COBALT_CONF_H
 
 /* Non standard confstrings for uname(3). */
 #define _CS_UNAME_SYSNAME 1

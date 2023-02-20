@@ -17,8 +17,8 @@
  * Resource usage.
  */
 
-#ifndef _DENNIX_RUSAGENS_H
-#define _DENNIX_RUSAGENS_H
+#ifndef _COBALT_RUSAGENS_H
+#define _COBALT_RUSAGENS_H
 
 #include <cobalt/timespec.h>
 

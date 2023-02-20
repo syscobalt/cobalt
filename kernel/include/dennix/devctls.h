@@ -17,8 +17,8 @@
  * Device Control.
  */
 
-#ifndef _DENNIX_DEVCTLS_H
-#define _DENNIX_DEVCTLS_H
+#ifndef _COBALT_DEVCTLS_H
+#define _COBALT_DEVCTLS_H
 
 #include <cobalt/devctl.h>
 #include <cobalt/winsize.h>

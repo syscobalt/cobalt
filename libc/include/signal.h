@@ -22,7 +22,7 @@
 
 #include <sys/cdefs.h>
 #include <cobalt/signal.h>
-#if __USE_DENNIX || __USE_POSIX
+#if __USE_COBALT || __USE_POSIX
 #  define __need_pid_t
 #  define __need_pthread_t
 #  define __need_pthread_attr_t
@@ -46,7 +46,7 @@ typedef __SIG_ATOMIC_TYPE__ sig_atomic_t;
 int raise(int);
 void (*signal(int, void(*)(int)))(int);
 
-#if __USE_DENNIX || __USE_POSIX
+#if __USE_COBALT || __USE_POSIX
 int kill(pid_t, int);
 int pthread_sigmask(int, const sigset_t* __restrict, sigset_t* __restrict);
 int sigaction(int, const struct sigaction* __restrict,
@@ -63,7 +63,7 @@ int sigwait(const sigset_t* __restrict, int* __restrict);
 int sigwaitinfo(const sigset_t* __restrict, siginfo_t* __restrict);
 #endif
 
-#if __USE_DENNIX
+#if __USE_COBALT
 #  define NSIG _NSIG
 #  define SIG2STR_MAX 8
 

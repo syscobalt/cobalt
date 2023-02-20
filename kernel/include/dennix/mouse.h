@@ -17,8 +17,8 @@
  * Mouse data.
  */
 
-#ifndef _DENNIX_MOUSE_H
-#define _DENNIX_MOUSE_H
+#ifndef _COBALT_MOUSE_H
+#define _COBALT_MOUSE_H
 
 #include <stdint.h>
 #include <cobalt/devctl.h>

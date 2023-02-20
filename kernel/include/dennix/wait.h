@@ -17,8 +17,8 @@
  * Waiting for other processes.
  */
 
-#ifndef _DENNIX_WAIT_H
-#define _DENNIX_WAIT_H
+#ifndef _COBALT_WAIT_H
+#define _COBALT_WAIT_H
 
 #define WNOHANG (1 << 0)
 #define WUNTRACED (1 << 1)

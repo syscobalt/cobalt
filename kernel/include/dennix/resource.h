@@ -17,8 +17,8 @@
  * Resource operations.
  */
 
-#ifndef _DENNIX_RESOURCE_H
-#define _DENNIX_RESOURCE_H
+#ifndef _COBALT_RESOURCE_H
+#define _COBALT_RESOURCE_H
 
 #define RUSAGE_SELF 0
 #define RUSAGE_CHILDREN 1

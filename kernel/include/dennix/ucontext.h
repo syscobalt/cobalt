@@ -17,8 +17,8 @@
  * User context.
  */
 
-#ifndef _DENNIX_UCONTEXT_H
-#define _DENNIX_UCONTEXT_H
+#ifndef _COBALT_UCONTEXT_H
+#define _COBALT_UCONTEXT_H
 
 #include <cobalt/registers.h>
 #include <cobalt/sigset.h>

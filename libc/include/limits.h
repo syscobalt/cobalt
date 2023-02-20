@@ -35,7 +35,7 @@
 #undef MB_LEN_MAX
 #define MB_LEN_MAX 4
 
-#if __USE_DENNIX || __USE_POSIX
+#if __USE_COBALT || __USE_POSIX
 #  include <cobalt/limits.h>
 
 #  define ATEXIT_MAX 32
@@ -93,7 +93,7 @@
 #  define _POSIX2_RE_DUP_MAX 255
 #endif
 
-#if __USE_DENNIX
+#if __USE_COBALT
 #  define GETENTROPY_MAX _GETENTROPY_MAX
 #  define NSIG_MAX _NSIG_MAX
 #endif

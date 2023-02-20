@@ -17,8 +17,8 @@
  * Unix domain sockets.
  */
 
-#ifndef _DENNIX_UN_H
-#define _DENNIX_UN_H
+#ifndef _COBALT_UN_H
+#define _COBALT_UN_H
 
 #include <cobalt/types.h>
 

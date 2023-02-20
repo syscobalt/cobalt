@@ -17,8 +17,8 @@
  * Terminal window size.
  */
 
-#ifndef _DENNIX_WINSIZE_H
-#define _DENNIX_WINSIZE_H
+#ifndef _COBALT_WINSIZE_H
+#define _COBALT_WINSIZE_H
 
 struct winsize {
     unsigned short ws_row;

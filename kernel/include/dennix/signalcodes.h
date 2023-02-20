@@ -17,8 +17,8 @@
  * Signal codes.
  */
 
-#ifndef _DENNIX_SIGNALCODES_H
-#define _DENNIX_SIGNALCODES_H
+#ifndef _COBALT_SIGNALCODES_H
+#define _COBALT_SIGNALCODES_H
 
 #define SI_USER 1
 #define SI_QUEUE 2

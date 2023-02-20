@@ -17,8 +17,8 @@
  * Error numbers.
  */
 
-#ifndef _DENNIX_ERRNO_H
-#define _DENNIX_ERRNO_H
+#ifndef _COBALT_ERRNO_H
+#define _COBALT_ERRNO_H
 
 #define E2BIG 1
 #define EACCES 2

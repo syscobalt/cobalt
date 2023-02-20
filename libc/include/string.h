@@ -52,7 +52,7 @@ char* strstr(const char*, const char*);
 char* strtok(char* __restrict, const char* __restrict);
 size_t strxfrm(char* __restrict, const char* __restrict, size_t);
 
-#if __USE_DENNIX || __USE_POSIX
+#if __USE_COBALT || __USE_POSIX
 char* stpcpy(char* __restrict, const char* __restrict);
 char* stpncpy(char* __restrict, const char* __restrict, size_t);
 char* strdup(const char*);
@@ -62,7 +62,7 @@ char* strsignal(int);
 char* strtok_r(char* __restrict, const char* __restrict, char** __restrict);
 #endif
 
-#if __USE_DENNIX
+#if __USE_COBALT
 void explicit_bzero(void*, size_t);
 size_t strlcpy(char* __restrict, const char* __restrict, size_t);
 #endif

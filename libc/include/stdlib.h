@@ -25,7 +25,7 @@
 #define __need_size_t
 #define __need_wchar_t
 #include <bits/types.h>
-#if __USE_DENNIX
+#if __USE_COBALT
 #  include <cobalt/oflags.h>
 #  include <stdint.h>
 #endif
@@ -80,7 +80,7 @@ int system(const char*);
 size_t wcstombs(char* __restrict, const wchar_t* __restrict, size_t);
 int wctomb(char*, wchar_t);
 
-#if __USE_C >= 1999 || __USE_DENNIX
+#if __USE_C >= 1999 || __USE_COBALT
 typedef struct {
     long long quot;
     long long rem;
@@ -96,7 +96,7 @@ long long strtoll(const char* __restrict, char** __restrict, int);
 unsigned long long strtoull(const char* __restrict, char** __restrict, int);
 #endif
 
-#if __USE_DENNIX || __USE_POSIX
+#if __USE_COBALT || __USE_POSIX
 int grantpt(int);
 char* mkdtemp(char*);
 int mkstemp(char*);
@@ -108,7 +108,7 @@ int unlockpt(int);
 int unsetenv(const char*);
 #endif
 
-#if __USE_DENNIX
+#if __USE_COBALT
 uint32_t arc4random(void);
 void arc4random_buf(void*, size_t);
 uint32_t arc4random_uniform(uint32_t);

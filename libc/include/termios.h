@@ -24,7 +24,7 @@
 #define __need_pid_t
 #include <bits/types.h>
 #include <cobalt/termios.h>
-#if __USE_DENNIX
+#if __USE_COBALT
 #  include <cobalt/winsize.h>
 #endif
 
@@ -40,7 +40,7 @@ int tcflush(int, int);
 int tcgetattr(int, struct termios*);
 int tcsetattr(int, int, const struct termios*);
 
-#if __USE_DENNIX
+#if __USE_COBALT
 int tcgetwinsize(int, struct winsize*);
 int tcsetsid(int, pid_t);
 int tcsetwinsize(int, const struct winsize*);

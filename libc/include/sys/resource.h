@@ -27,7 +27,7 @@
 #include <bits/types.h>
 #include <bits/timeval.h>
 #include <cobalt/resource.h>
-#if __USE_DENNIX
+#if __USE_COBALT
 #  include <cobalt/rusagens.h>
 #endif
 
@@ -63,7 +63,7 @@ int getrlimit(int, struct rlimit*);
 int getrusage(int, struct rusage*);
 int setrlimit(int, const struct rlimit*);
 
-#if __USE_DENNIX
+#if __USE_COBALT
 int getrusagens(int, struct rusagens*);
 #endif
 

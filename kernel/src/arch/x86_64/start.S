@@ -153,7 +153,7 @@ unsupportedCpu:
 
 .section bootstrap_rodata, "a"
 errorMsg:
-    .asciz "This version of Dennix requires an x86_64 CPU."
+    .asciz "This version of Cobalt requires an x86_64 CPU."
 
 fakeGdt:
     .skip 8

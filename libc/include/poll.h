@@ -22,7 +22,7 @@
 
 #include <sys/cdefs.h>
 #include <cobalt/poll.h>
-#if __USE_DENNIX
+#if __USE_COBALT
 #  include <cobalt/sigset.h>
 #  include <cobalt/timespec.h>
 #endif
@@ -33,7 +33,7 @@ extern "C" {
 
 int poll(struct pollfd[], nfds_t, int);
 
-#if __USE_DENNIX
+#if __USE_COBALT
 int ppoll(struct pollfd[], nfds_t, const struct timespec* __restrict,
         const sigset_t* __restrict);
 #endif

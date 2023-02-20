@@ -17,8 +17,8 @@
  * CPU registers.
  */
 
-#ifndef _DENNIX_REGISTERS_H
-#define _DENNIX_REGISTERS_H
+#ifndef _COBALT_REGISTERS_H
+#define _COBALT_REGISTERS_H
 
 typedef unsigned long __reg_t;
 

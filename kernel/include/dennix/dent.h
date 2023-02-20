@@ -17,8 +17,8 @@
  * Directory entries.
  */
 
-#ifndef _DENNIX_DENT_H
-#define _DENNIX_DENT_H
+#ifndef _COBALT_DENT_H
+#define _COBALT_DENT_H
 
 #include <cobalt/types.h>
 

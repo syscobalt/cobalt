@@ -17,8 +17,8 @@
  * System clocks.
  */
 
-#ifndef _DENNIX_CLOCK_H
-#define _DENNIX_CLOCK_H
+#ifndef _COBALT_CLOCK_H
+#define _COBALT_CLOCK_H
 
 #define CLOCK_MONOTONIC 0
 #define CLOCK_REALTIME 1

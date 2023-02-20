@@ -38,8 +38,8 @@
 #include "trap.h"
 #include "variables.h"
 
-#ifndef DENNIX_VERSION
-#  define DENNIX_VERSION ""
+#ifndef COBALT_VERSION
+#  define COBALT_VERSION ""
 #endif
 
 struct CompleteCommand* currentCommand;
@@ -297,7 +297,7 @@ static int parseOptions(int argc, char* argv[]) {
                 help(argv[0]);
                 exit(0);
             } else if (strcmp(arg, "version") == 0) {
-                printf("%s (Dennix) %s\n", argv[0], DENNIX_VERSION);
+                printf("%s (Cobalt) %s\n", argv[0], COBALT_VERSION);
                 exit(0);
             } else {
                 errx(1, "unrecognized option '--%s'", arg);

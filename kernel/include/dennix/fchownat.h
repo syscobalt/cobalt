@@ -17,8 +17,8 @@
  * Parameters for fchownat.
  */
 
-#ifndef _DENNIX_FCHOWNAT_H
-#define _DENNIX_FCHOWNAT_H
+#ifndef _COBALT_FCHOWNAT_H
+#define _COBALT_FCHOWNAT_H
 
 #include <sys/types.h>
 

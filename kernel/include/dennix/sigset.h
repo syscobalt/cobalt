@@ -17,8 +17,8 @@
  * Signal sets.
  */
 
-#ifndef _DENNIX_SIGSET_H
-#define _DENNIX_SIGSET_H
+#ifndef _COBALT_SIGSET_H
+#define _COBALT_SIGSET_H
 
 typedef __UINT64_TYPE__ sigset_t;
 
