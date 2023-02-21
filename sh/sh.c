@@ -353,8 +353,12 @@ static int parseOptions(int argc, char* argv[]) {
 
 int printPrompt(bool newCommand) {
     if (newCommand) {
-        int length = fprintf(stderr, "\e[32m%s@%s \e[1;36m%s $\e[22;39m ",
-                username, hostname, pwd ? pwd : ".");
+        /*int length = fprintf(stderr, "\e[32m%s@%s \e[1;36m%s $\e[22;39m ",
+                username, hostname, pwd ? pwd : ".");*/
+        /*
+         *  falkosc: `username` and `hostname` aren't truly really a username and a hostname, these are just fictional, so I removed them
+         */
+        int length = fprintf(stderr, "\e[32mcobaltiso \e[1;36m%s $\e[22;39m ", pwd ? pwd : ".");
         // 20 bytes are used for escape sequences.
         return length - 20;
     } else {

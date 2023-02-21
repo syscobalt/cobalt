@@ -44,6 +44,9 @@
 static void startInitProcess(void* param);
 static Reference<DirectoryVnode> loadInitrd(const multiboot_info* multiboot);
 
+/*
+ *  The function `kmain` is called by `start.S`.
+ */
 extern "C" void kmain(uint32_t /*magic*/, paddr_t multibootAddress) {
     AddressSpace::initialize();
 
@@ -139,6 +142,9 @@ static void startInitProcess(void* param) {
     Thread::addThread(initProcess->threads[0]);
 }
 
+/*
+ *  Get the bootloader to load the initial ramdisk to memory...
+ */
 static Reference<DirectoryVnode> loadInitrd(const multiboot_info* multiboot) {
     uintptr_t p = (uintptr_t) multiboot + 8;
 

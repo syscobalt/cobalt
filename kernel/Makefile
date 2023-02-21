@@ -81,7 +81,8 @@ OBJ = \
 	thread.o \
 	virtualbox.o \
 	vnode.o \
-	worker.o
+	worker.o \
+	nic.o
 
 all: $(BUILD)/kernel
 
