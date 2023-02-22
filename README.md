@@ -2,9 +2,9 @@
 File: "README.md"
 Author: "Falkosc223, Dashbloxx"
 ---
-![image](https://user-images.githubusercontent.com/39970513/220783101-c65a9f8e-32aa-45e9-ba85-ccec08d6721e.png)
-
 # Cobalt
+## Screenshot
+![image](https://user-images.githubusercontent.com/39970513/220783101-c65a9f8e-32aa-45e9-ba85-ccec08d6721e.png)
 ## What is Cobalt?
 Cobalt is a UNIX-like operating system that is designed for speed, and compability. Cobalt is nearly compatible with most programs made for UNIX-like systems. Cobalt contains code from Cobalt & Sortix.
 ## How can I build Cobalt?
