@@ -31,4 +31,4 @@ Others who created code which can be found here are listed aswell:
 * [dennis95](https://github.com/dennis95)
 ## Ports
 There is a subfolder called `ports`, which uses a port manager made for [dennix](https://github.com/dennis95/dennix) that is compatible with Cobalt. Most of these ports have been made for Dennix, but were slightly modified to work with Cobalt.
-These ports are automatically built when you run `make`, because they are considered vital, although others may see it as bloatware.
+These ports are automatically built when you run `make`, because they are considered vital, although others may see it as bloatware. Cobalt itself is very fast, but with the basic ports like GCC, AWK, BIM, binutils, DOOM, gettext, libSDL, some other basic libraries, make, nano, ncurses being loaded to RAM at startup (the initial ramdisk stores these binaries!), it makes the boot process much slower. This however, will be fixed in the future, as Cobalt will install itself to the disk and allow you to load binaries to RAM right when you need to run them.
