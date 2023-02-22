@@ -23,6 +23,9 @@ INITRD = $(BUILD_DIR)/initrd.tar.xz
 ISO = cobalt.iso
 LICENSE = $(LICENSES_DIR)/cobalt/LICENSE
 
+DXPORT = ./ports/dxport --host=$(ARCH)-cobalt --builddir=$(BUILD_DIR)/install-ports
+DXPORT += --sysroot=$(SYSROOT)
+
 all: libc kernel libdxui apps sh utils iso
 
 apps: $(INCLUDE_DIR) $(LIB_DIR)
@@ -57,6 +60,11 @@ install-libdxui: $(INCLUDE_DIR)
 $(LIB_DIR):
 	$(MAKE) -C libc install-libs
 	$(MAKE) -C libdxui install-lib
+
+install-ports $(DXPORT_DIR): $(INCLUDE_DIR) $(LIB_DIR)
+ifneq ($(wildcard ./ports/dxport),)
+	-$(DXPORT) install -k all
+endif
 
 install-sh: $(INCLUDE_DIR) $(LIB_DIR)
 	$(MAKE) -C sh install

@@ -19,9 +19,9 @@ The first line will clean the root filesystem model, and delete the `.iso` file.
 ## Testing Cobalt
 Cobalt currently supports only two architectures, which are i386, and x86_64. When Cobalt is built for one of these architectures you can test them using QEMU:
 ```
-qemu-system-x86_64 -cdrom cobalt.iso
+qemu-system-x86_64 -m 1024M -cdrom cobalt.iso
 ```
-This will get QEMU to test out the CDROM image of Cobalt that was built.
+This will get QEMU to test out the CDROM image of Cobalt that was built. If you are running on a x86_64 architecture, you can add `-accel kvm` to make the emulation even faster.
 ## Contributing
 For guidelines on contributing, see [this](CONTRIBUTING.md) page. A list of contributors can be found here:
 * [Falkosc223](https://github.com/orgs/syscobalt/people/Falkosc223)
@@ -30,4 +30,5 @@ For guidelines on contributing, see [this](CONTRIBUTING.md) page. A list of cont
 Others who created code which can be found here are listed aswell:
 * [dennis95](https://github.com/dennis95)
 ## Ports
-See the [ports repository](https://github.com/syscobalt/cobalt-ports). This repository contains ported software and user-made applications that should be optional to install on Cobalt.
+There is a subfolder called `ports`, which uses a port manager made for [dennix](https://github.com/dennis95/dennix) that is compatible with Cobalt. Most of these ports have been made for Dennix, but were slightly modified to work with Cobalt.
+These ports are automatically built when you run `make`, because they are considered vital, although others may see it as bloatware.

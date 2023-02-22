@@ -19,3 +19,4 @@ INCLUDE_DIR = $(SYSROOT)/include
 LIB_DIR = $(SYSROOT)/lib
 SBIN_DIR = $(SYSROOT)/sbin
 LICENSES_DIR = $(SYSROOT)/share/licenses
+DXPORT_DIR = $(SYSROOT)/local/dxport
