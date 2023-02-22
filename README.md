@@ -26,6 +26,7 @@ This will get QEMU to test out the CDROM image of Cobalt that was built.
 For guidelines on contributing, see [this](CONTRIBUTING.md) page. A list of contributors can be found here:
 * [Falkosc223](https://github.com/orgs/syscobalt/people/Falkosc223)
 * [Dashbloxx](https://github.com/orgs/syscobalt/people/Dashbloxx)
+
 Others who created code which can be found here are listed aswell:
 * [dennis95](https://github.com/dennis95)
 ## Ports
