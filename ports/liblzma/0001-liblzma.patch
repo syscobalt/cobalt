@@ -1,0 +1,37 @@
+diff -Naur a/build-aux/config.sub b/build-aux/config.sub
+--- a/build-aux/config.sub	2020-03-17 15:29:35.000000000 +0100
++++ b/build-aux/config.sub	2020-05-03 15:44:13.930663444 +0200
+@@ -1368,7 +1368,7 @@
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -auroraux* | -solaris* \
+ 	      | -sym* | -kopensolaris* | -plan9* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+-	      | -aos* | -aros* | -cloudabi* | -sortix* \
++	      | -aos* | -aros* | -cloudabi* | -sortix* | -cobalt* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -knetbsd* | -mirbsd* | -netbsd* \
+diff -Naur a/src/common/tuklib_physmem.c b/src/common/tuklib_physmem.c
+--- a/src/common/tuklib_physmem.c	2020-03-17 15:28:50.000000000 +0100
++++ b/src/common/tuklib_physmem.c	2020-05-03 15:35:18.000000000 +0200
+@@ -70,6 +70,9 @@
+ // This sysinfo() is Linux-specific.
+ #elif defined(TUKLIB_PHYSMEM_SYSINFO)
+ #	include <sys/sysinfo.h>
++
++#elif defined(__cobalt__)
++#	include <unistd.h>
+ #endif
+ 
+ 
+@@ -210,6 +213,11 @@
+ 	struct sysinfo si;
+ 	if (sysinfo(&si) == 0)
+ 		ret = (uint64_t)si.totalram * si.mem_unit;
++
++#elif defined(__cobalt__)
++	struct meminfo info;
++	meminfo(&info);
++	return info.mem_total;
+ #endif
+ 
+ 	return ret;

@@ -1,0 +1,24 @@
+diff -Naur a/build-aux/config.sub b/build-aux/config.sub
+--- a/build-aux/config.sub	2022-02-12 13:28:45.000000000 +0100
++++ b/build-aux/config.sub	2022-06-19 14:25:12.047015683 +0200
+@@ -1728,7 +1728,7 @@
+ 	     | hpux* | unos* | osf* | luna* | dgux* | auroraux* | solaris* \
+ 	     | sym* |  plan9* | psp* | sim* | xray* | os68k* | v88r* \
+ 	     | hiux* | abug | nacl* | netware* | windows* \
+-	     | os9* | macos* | osx* | ios* \
++	     | os9* | macos* | osx* | ios* | cobalt* \
+ 	     | mpw* | magic* | mmixware* | mon960* | lnews* \
+ 	     | amigaos* | amigados* | msdos* | newsos* | unicos* | aof* \
+ 	     | aos* | aros* | cloudabi* | sortix* | twizzler* \
+diff -Naur a/libcharset/build-aux/config.sub b/libcharset/build-aux/config.sub
+--- a/libcharset/build-aux/config.sub	2022-02-12 13:28:45.000000000 +0100
++++ b/libcharset/build-aux/config.sub	2022-06-19 14:25:32.048050970 +0200
+@@ -1728,7 +1728,7 @@
+ 	     | hpux* | unos* | osf* | luna* | dgux* | auroraux* | solaris* \
+ 	     | sym* |  plan9* | psp* | sim* | xray* | os68k* | v88r* \
+ 	     | hiux* | abug | nacl* | netware* | windows* \
+-	     | os9* | macos* | osx* | ios* \
++	     | os9* | macos* | osx* | ios* | cobalt* \
+ 	     | mpw* | magic* | mmixware* | mon960* | lnews* \
+ 	     | amigaos* | amigados* | msdos* | newsos* | unicos* | aof* \
+ 	     | aos* | aros* | cloudabi* | sortix* | twizzler* \

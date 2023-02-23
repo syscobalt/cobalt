@@ -1,0 +1,70 @@
+diff -Naur a/build-aux/config.sub b/build-aux/config.sub
+--- a/build-aux/config.sub	2021-10-23 20:49:09.000000000 +0200
++++ b/build-aux/config.sub	2022-08-28 17:36:19.079107412 +0200
+@@ -1723,7 +1723,7 @@
+ 	     | hpux* | unos* | osf* | luna* | dgux* | auroraux* | solaris* \
+ 	     | sym* |  plan9* | psp* | sim* | xray* | os68k* | v88r* \
+ 	     | hiux* | abug | nacl* | netware* | windows* \
+-	     | os9* | macos* | osx* | ios* \
++	     | os9* | macos* | osx* | ios* | cobalt* \
+ 	     | mpw* | magic* | mmixware* | mon960* | lnews* \
+ 	     | amigaos* | amigados* | msdos* | newsos* | unicos* | aof* \
+ 	     | aos* | aros* | cloudabi* | sortix* | twizzler* \
+diff -Naur a/io.c b/io.c
+--- a/io.c	2021-10-24 19:31:24.000000000 +0200
++++ b/io.c	2022-08-28 17:42:50.057998539 +0200
+@@ -77,10 +77,6 @@
+ #include <netdb.h>
+ #endif /* HAVE_NETDB_H */
+ 
+-#ifdef HAVE_SYS_SELECT_H
+-#include <sys/select.h>
+-#endif	/* HAVE_SYS_SELECT_H */
+-
+ #ifndef HAVE_GETADDRINFO
+ #include "missing_d/getaddrinfo.h"
+ #endif
+@@ -95,6 +91,10 @@
+ 
+ #endif /* HAVE_SOCKETS */
+ 
++#ifdef HAVE_SYS_SELECT_H
++#include <sys/select.h>
++#endif	/* HAVE_SYS_SELECT_H */
++
+ #ifndef AF_UNSPEC
+ #define AF_UNSPEC 0
+ #endif
+diff -Naur a/profile.c b/profile.c
+--- a/profile.c	2021-10-24 19:31:24.000000000 +0200
++++ b/profile.c	2022-08-28 17:43:50.274744888 +0200
+@@ -1711,7 +1711,7 @@
+ 			*obufout++ = '\\';
+ 			*obufout++ = printables[i];
+ 		/* NB: Deliberate use of lower-case versions. */
+-		} else if (isascii(*str) && isprint(*str)) {
++		} else if (*str <= 0x7F && isprint(*str)) {
+ 			*obufout++ = *str;
+ 			ofre += 1;	/* used 1 less than expected */
+ 		} else {
+diff -Naur a/support/getopt.h b/support/getopt.h
+--- a/support/getopt.h	2019-08-28 20:54:14.000000000 +0200
++++ b/support/getopt.h	2022-08-28 17:45:19.759813461 +0200
+@@ -48,8 +48,7 @@
+ extern "C" {
+ #endif
+ 
+-#ifdef __KLIBC__
+-/* OS/2 kLIBC has already getopt(). So to avoid name clash, rename
++/* libc has already getopt(). So to avoid name clash, rename
+    them here. */
+ 
+ # define optarg		gawk_optarg
+@@ -60,7 +59,6 @@
+ # define getopt				gawk_getopt
+ # define getopt_long		gawk_getopt_long
+ # define getopt_long_only	gawk_getopt_long_only
+-#endif
+ 
+ 
+ /* For communication from `getopt' to the caller.

@@ -1,0 +1,9 @@
+version=2.0.14
+src_url=https://www.libsdl.org/release/SDL2-$version.tar.gz
+src_type=tar.gz
+src_sha256=d8215b571a581be1332d2106f8036fcb03d12a70bae01e20f424976d275432bc
+patches=0001-libSDL2.patch
+buildsystem=configure
+extra_configure_flags="--disable-sdl2-config --without-x"
+license_files=COPYING.txt
+purge="lib/libSDL2_test.la lib/libSDL2.la lib/libSDL2main.la"

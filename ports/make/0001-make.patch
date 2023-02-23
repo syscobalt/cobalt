@@ -1,0 +1,99 @@
+diff -Naur a/build-aux/config.sub b/build-aux/config.sub
+--- a/build-aux/config.sub	2019-09-15 20:23:28.000000000 +0200
++++ b/build-aux/config.sub	2020-03-21 16:23:41.049799068 +0100
+@@ -1343,7 +1343,7 @@
+ 	     | hpux* | unos* | osf* | luna* | dgux* | auroraux* | solaris* \
+ 	     | sym* | kopensolaris* | plan9* \
+ 	     | amigaos* | amigados* | msdos* | newsos* | unicos* | aof* \
+-	     | aos* | aros* | cloudabi* | sortix* | twizzler* \
++	     | aos* | aros* | cloudabi* | sortix* | twizzler* | cobalt* \
+ 	     | nindy* | vxsim* | vxworks* | ebmon* | hms* | mvs* \
+ 	     | clix* | riscos* | uniplus* | iris* | isc* | rtu* | xenix* \
+ 	     | knetbsd* | mirbsd* | netbsd* \
+diff -Naur a/lib/getdtablesize.c b/lib/getdtablesize.c
+--- a/lib/getdtablesize.c	2020-01-19 21:34:01.000000000 +0100
++++ b/lib/getdtablesize.c	2020-03-21 19:31:50.973724816 +0100
+@@ -87,6 +87,8 @@
+   return dtablesize;
+ }
+ 
++#elif defined(__cobalt__)
++// We don't need getdtablesize to get make to compile.
+ #else
+ 
+ # include <limits.h>
+diff -Naur a/src/dir.c b/src/dir.c
+--- a/src/dir.c	2020-01-03 08:11:27.000000000 +0100
++++ b/src/dir.c	2020-03-21 17:08:04.986605852 +0100
+@@ -1226,7 +1226,7 @@
+           /* The glob interface wants a 'struct dirent', so mock one up.  */
+           struct dirent *d;
+           size_t len = df->length + 1;
+-          size_t sz = sizeof (*d) - sizeof (d->d_name) + len;
++          size_t sz = sizeof (*d) + len;
+           if (sz > bufsz)
+             {
+               bufsz *= 2;
+diff -Naur a/src/main.c b/src/main.c
+--- a/src/main.c	2020-01-19 21:32:59.000000000 +0100
++++ b/src/main.c	2020-03-21 17:10:50.666614513 +0100
+@@ -2445,9 +2445,9 @@
+           if (restarts)
+             {
+               char *b = alloca (40);
+-              sprintf (b, "MAKE_RESTARTS=%s%u",
++              sprintf (b, "%s%u",
+                        OUTPUT_IS_TRACED () ? "-" : "", restarts);
+-              putenv (b);
++              setenv ("MAKE_RESTARTS", b, 1);
+             }
+ 
+           fflush (stdout);
+diff -Naur a/src/misc.c b/src/misc.c
+--- a/src/misc.c	2020-01-03 08:11:27.000000000 +0100
++++ b/src/misc.c	2020-03-22 12:00:44.430225423 +0100
+@@ -835,10 +835,12 @@
+ 
+   if (value == 0)
+     {
++#ifndef __cobalt__
+       long int x = pathconf ("/", _PC_PATH_MAX);
+       if (x > 0)
+         value = x;
+       else
++#endif
+         return MAXPATHLEN;
+     }
+ 
+diff -Naur a/src/output.c b/src/output.c
+--- a/src/output.c	2020-01-03 08:11:27.000000000 +0100
++++ b/src/output.c	2020-03-21 17:12:47.596620622 +0100
+@@ -254,6 +254,7 @@
+ static void *
+ acquire_semaphore (void)
+ {
++#ifndef __cobalt__
+   static struct flock fl;
+ 
+   fl.l_type = F_WRLCK;
+@@ -263,6 +264,7 @@
+   if (fcntl (sync_handle, F_SETLKW, &fl) != -1)
+     return &fl;
+   perror ("fcntl()");
++#endif
+   return NULL;
+ }
+ 
+@@ -270,10 +272,12 @@
+ static void
+ release_semaphore (void *sem)
+ {
++#ifndef __cobalt__
+   struct flock *flp = (struct flock *)sem;
+   flp->l_type = F_UNLCK;
+   if (fcntl (sync_handle, F_SETLKW, flp) == -1)
+     perror ("fcntl()");
++#endif
+ }
+ 
+ /* Returns a file descriptor to a temporary file.  The file is automatically

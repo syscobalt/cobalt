@@ -1,0 +1,7 @@
+#! /bin/sh
+# This script wraps pkg-config so that the sysroot is used correctly.
+export PKG_CONFIG_SYSROOT_DIR="${dxport_sysroot?}"
+export PKG_CONFIG_LIBDIR="$dxport_sysroot/lib/pkgconfig"
+export PKG_CONFIG_SYSTEM_INCLUDE_PATH="$dxport_sysroot/include"
+export PKG_CONFIG_SYSTEM_LIBRARY_PATH="$dxport_sysroot/lib"
+exec pkg-config --static "$@"

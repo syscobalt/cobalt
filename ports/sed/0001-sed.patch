@@ -1,0 +1,38 @@
+diff -Naur a/build-aux/config.sub b/build-aux/config.sub
+--- a/build-aux/config.sub	2020-01-05 07:26:24.000000000 +0100
++++ b/build-aux/config.sub	2022-07-20 15:07:31.092066319 +0200
+@@ -1341,7 +1341,7 @@
+ 	gnu* | bsd* | mach* | minix* | genix* | ultrix* | irix* \
+ 	     | *vms* | esix* | aix* | cnk* | sunos | sunos[34]*\
+ 	     | hpux* | unos* | osf* | luna* | dgux* | auroraux* | solaris* \
+-	     | sym* | kopensolaris* | plan9* \
++	     | sym* | kopensolaris* | plan9* | cobalt* \
+ 	     | amigaos* | amigados* | msdos* | newsos* | unicos* | aof* \
+ 	     | aos* | aros* | cloudabi* | sortix* | twizzler* \
+ 	     | nindy* | vxsim* | vxworks* | ebmon* | hms* | mvs* \
+diff -Naur a/lib/regex_internal.c b/lib/regex_internal.c
+--- a/lib/regex_internal.c	2020-01-01 18:59:13.000000000 +0100
++++ b/lib/regex_internal.c	2022-07-20 15:04:44.620649690 +0200
+@@ -17,6 +17,10 @@
+    License along with the GNU C Library; if not, see
+    <https://www.gnu.org/licenses/>.  */
+ 
++#ifndef isascii
++#  define isascii(c) ((unsigned int) c <= 0x7F)
++#endif
++
+ static void re_string_construct_common (const char *str, Idx len,
+ 					re_string_t *pstr,
+ 					RE_TRANSLATE_TYPE trans, bool icase,
+diff -Naur a/Makefile.in b/Makefile.in
+--- a/Makefile.in	2020-01-15 04:56:51.000000000 +0100
++++ b/Makefile.in	2022-07-20 14:59:52.206264726 +0200
+@@ -1999,7 +1999,7 @@
+ top_build_prefix = @top_build_prefix@
+ top_builddir = @top_builddir@
+ top_srcdir = @top_srcdir@
+-SUBDIRS = po . gnulib-tests
++SUBDIRS = po .
+ 
+ # This applies to all parts: gnulib, sed, testsuites
+ AM_CPPFLAGS = -I$(top_srcdir) \

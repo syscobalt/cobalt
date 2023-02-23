@@ -1,0 +1,465 @@
+#! /bin/sh
+
+# Copyright (c) 2019, 2020, 2021 Dennis Wölfing
+#
+# Permission to use, copy, modify, and/or distribute this software for any
+# purpose with or without fee is hereby granted, provided that the above
+# copyright notice and this permission notice appear in all copies.
+#
+# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
+# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
+# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
+# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
+# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
+# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
+# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+
+dxport_me="$0"
+dxportdir="$(cd "$(dirname "$0")" && pwd)"
+dxport_builddir="$dxportdir/build"
+
+dxport_allports=$(find -path ./build -prune -false -o -name '*.port.sh' | sed 's|.*/||;s|\.port\.sh$||' | sort)
+dxport_all=$(echo "$dxport_allports" | sed '/^grub$/d')
+
+dxport_absolute_path() {
+    case "$1" in
+    /*)
+        echo "$1"
+        ;;
+    *)
+        echo "$PWD/$1"
+        ;;
+    esac
+}
+
+dxport_check_sha256() {
+    if [ -n "$src_sha256" ]; then
+        printf "%s\t%s\n" "$src_sha256" "$1" | sha256sum -c
+    fi
+}
+
+dxport_default_funcs() {
+    prepare_source() {
+        dxport_unused_prepare_source=yes
+    }
+
+    prepare() {
+        :
+    }
+
+    build() {
+        cd "$builddir"
+        if [ "$buildsystem" = configure ]; then
+            "$srcdir/configure" --host="$host" --prefix= $extra_configure_flags
+        elif [ "$buildsystem" = make ]; then
+            extra_make_flags="CC=$host-gcc prefix= $extra_make_flags"
+        elif [ "$buildsystem" = none ]; then
+            return
+        fi
+
+        [ -n "$MAKEFLAGS" ] || MAKEFLAGS=-j8
+        make $MAKEFLAGS $make_targets $extra_make_flags
+    }
+
+    install_port() {
+        cd "$builddir"
+        if [ -n "$install_targets" ]; then
+            make $install_targets DESTDIR="$SYSROOT" $extra_make_flags
+        else
+            make install-strip DESTDIR="$SYSROOT" $extra_make_flags || make install DESTDIR="$SYSROOT" $extra_make_flags
+        fi
+    }
+
+    install_license() {
+        if [ -n "$license_files" ]; then
+            cd "$srcdir"
+            mkdir -p "$SYSROOT/share/licenses/$portname"
+            cp $license_files "$SYSROOT/share/licenses/$portname"
+        fi
+    }
+
+    post_install() {
+        :
+    }
+}
+
+dxport_download_git() {
+    srcdir="$dxport_builddir/$port/${src_basename%.git}"
+    if [ -d "$srcdir/.git" ]; then
+        cd "$srcdir"
+        git fetch origin "${src_commit:-HEAD}"
+    else
+        git clone "$src_url" "$srcdir"
+    fi
+
+    cd "$srcdir"
+    git checkout -fq "${src_commit:-origin/HEAD}"
+    dxport_hash="$(git rev-parse HEAD)"
+    : "${revnum:=$(git rev-list --count HEAD)}"
+}
+
+dxport_download_sources() {
+    if [ -n "$src_url" ]; then
+        src_basename="$(basename "$src_url")"
+        case "$src_type" in
+        git)
+            dxport_download_git
+            ;;
+        tar*)
+            dxport_download_tar
+            ;;
+        zip)
+            dxport_download_zip
+            ;;
+        *)
+            dxport_error "Unsupported src_type '$src_type'"
+        esac
+    fi
+}
+
+dxport_download_tar() {
+    [ "$dxport_dump" = yes ] && dxport_archive="$portdir/$src_url" || dxport_archive="$src_basename"
+    if [ ! -f "$dxport_archive" ] || ! dxport_check_sha256 "$dxport_archive"; then
+        wget "$src_url" -O "$dxport_archive"
+        dxport_check_sha256 "$dxport_archive"
+    fi
+    tar xf "$dxport_archive"
+    srcdir="$dxport_builddir/$port/${src_basename%.$src_type}"
+}
+
+dxport_download_zip() {
+    [ "$dxport_dump" = yes ] && dxport_archive="$portdir/$src_url" || dxport_archive="$src_basename"
+    if [ ! -f "$dxport_archive" ] || ! dxport_check_sha256 "$dxport_archive"; then
+        wget "$src_url" -O "$dxport_archive"
+        dxport_check_sha256 "$dxport_archive"
+    fi
+    srcdir="$dxport_builddir/$port/${src_basename%.$src_type}"
+    mkdir -p "$srcdir"
+    bsdtar xf "$dxport_archive" -C "$srcdir"
+}
+
+dxport_dump() (
+    set -e
+    portname="$1"
+    cp -R "$dxportdir/$portname/." "$dxport_builddir/dump/$portname"
+
+    dxport_default_funcs
+    dxport_get_port_info "$portname"
+    [ "$dxport_dump" = yes ] && return 0
+
+    mkdir -p "$dxport_builddir/$portname"
+    cd "$dxport_builddir/$portname"
+
+    dxport_download_sources
+    prepare_source
+
+    case "$dxport_unused_prepare_source:$src_type" in
+    yes:tar*)
+        cp "$dxport_archive" "$dxport_builddir/dump/$portname"
+        src_url="$src_basename"
+        ;;
+    *)
+        cd "$srcdir/.."
+        srcdir_base="$(basename "$srcdir")"
+        tar cJf "$dxport_builddir/dump/$portname/$srcdir_base.tar.xz" --exclude="$srcdir_base/.git" "$srcdir_base"
+        src_url="$srcdir_base.tar.xz"
+        src_type=tar.xz
+        src_sha256="$(sha256sum "$dxport_builddir/dump/$portname/$src_url" | cut -c1-64)"
+    esac
+
+    cat >> "$dxport_builddir/dump/$portname/$portname.port.sh" << EOF
+# PORTDUMP
+dxport_dump=yes
+revnum='${revnum:-0}'
+src_url='$src_url'
+src_type='$src_type'
+src_sha256='$src_sha256'
+EOF
+)
+
+dxport_error() {
+    echo "$dxport_me: $1" >&2
+    exit 1
+}
+
+dxport_get_port_info() {
+    portdir="$dxportdir/$1"
+    . "$portdir/$1.port.sh"
+    dxport_hash="${src_sha256:-$src_commit}"
+}
+
+dxport_help() {
+    cat << EOF
+Usage: $dxport_me [OPTIONS] install [INSTALLOPTS] [PORT...]
+       $dxport_me [OPTIONS] dump [DUMPOPTS] [PORT...]
+OPTIONS:
+  --builddir=BUILDDIR      places build files into BUILDDIR
+  --help                   print this help
+  --host=HOST              set host to HOST
+  --sysroot=SYSROOT        set sysroot to SYSROOT
+
+INSTALLOPTS:
+  -d, --no-dependencies            do not install port dependencies
+  -f, --force-install              reinstall already installed ports
+  -k, --keep-going                 do not stop when one port fails to install
+  -u, --update-only                do not install any new ports
+  -D, --no-update-dependencies     do not update already installed dependencies
+  -U, --no-update                  do not update already installed ports
+
+DUMPOPTS:
+  -d, --no-dependencies            do not dump port dependencies
+EOF
+}
+
+dxport_install() (
+    set -e
+    portname="$1"
+
+    if [ "$dxport_install_no_dependencies" = yes ] && ! dxport_is_explicitly_requested_port "$portname"; then
+        return
+    fi
+
+    if [ -f "$SYSROOT/local/dxport/$portname" ]; then
+        dxport_installed_version="$(cat "$SYSROOT/local/dxport/$portname")"
+    elif [ "$dxport_install_update_only" = yes ]; then return
+    else
+        dxport_installed_version=0:0:0
+    fi
+
+    dxport_default_funcs
+    dxport_get_port_info "$portname"
+
+    # We might not know the revnum yet without downloading the source
+    dxport_new_version="${version:-0}:${revnum:--1}:${dxport_hash:-0}"
+    if [ "$dxport_install_force_install" != yes ] || ! dxport_is_explicitly_requested_port "$portname"; then
+        if ! dxport_version_outdated "$dxport_installed_version" "$dxport_new_version"; then
+            echo "$portname is already up-to-date."
+            return
+        fi
+
+        if [ "$dxport_install_no_update_dependencies" = yes ] &&
+                ! dxport_is_explicitly_requested_port "$portname" ||
+                [ "$dxport_install_no_update" = yes ] &&
+                [ -f "$SYSROOT/local/dxport/$portname" ]; then
+            echo "$portname is already installed and no update was requested."
+            return
+        fi
+    fi
+
+    mkdir -p "$dxport_builddir/$portname"
+    cd "$dxport_builddir/$portname"
+
+    dxport_download_sources
+
+    # Check again now that we know the final revnum.
+    dxport_new_version="${version:-0}:${revnum:-0}:${dxport_hash:-0}"
+    if [ "$dxport_install_force_install" != yes ] || ! dxport_is_explicitly_requested_port "$portname"; then
+        if ! dxport_version_outdated "$dxport_installed_version" "$dxport_new_version"; then
+            echo "$portname is already up-to-date."
+            return
+        fi
+    fi
+
+    if [ "$buildsystem" = configure ]; then
+        builddir="$dxport_builddir/$portname/build-$portname"
+        rm -rf "$builddir"
+        mkdir -p "$builddir"
+    else
+        builddir="$srcdir"
+    fi
+
+    [ "$dxport_dump" = yes ] || prepare_source
+
+    cd "$srcdir"
+    for p in $patches; do
+        patch -p1 < "$portdir/$p"
+    done
+
+    prepare
+    build
+    install_port
+    install_license
+    post_install
+
+    if [ -n "$purge" ]; then
+        for file in $purge; do
+            rm -rf "$SYSROOT/$file"
+        done
+    fi
+
+    mkdir -p "$SYSROOT/local/dxport"
+    echo "${version:-0}:${revnum:-0}:${dxport_hash:-0}" > "$SYSROOT/local/dxport/$portname"
+)
+
+dxport_is_explicitly_requested_port() {
+    case " $dxport_requested_ports " in
+    *" $1 "*) return 0 ;;
+    *) return 1 ;;
+    esac
+}
+
+dxport_resolve_dependencies() {
+    result=
+    for port; do
+        unset depends
+        dxport_get_port_info "$port"
+
+        for dependency in $depends; do
+            result="$result $(dxport_resolve_dependencies "$dependency")"
+        done
+        result="$result $port"
+    done
+
+    printf "%s" "$result" | awk -v RS=' ' -v ORS=' ' '!seen[$0]++'
+}
+
+dxport_version_outdated() {
+    IFS=: read -r oldversion oldrevision oldhash newversion newrevision newhash << EOF
+$1:$2
+EOF
+    if [ -z "$newhash" ]; then
+        return 0
+    fi
+
+    if [ "$oldversion:$oldrevision:$oldhash" = 0:0:0 ]; then
+        return 0
+    elif ! printf "%s\n" "$newversion" "$oldversion" | sort -CV; then
+        return 0
+    elif [ "$oldversion" != "$newversion" ]; then
+        return 1
+    elif [ "$newrevision" != -1 ] && [ "$oldrevision" -lt "$newrevision" ]; then
+        return 0
+    elif [ "$newrevision" != -1 ] && [ "$oldrevision" != "$newrevision" ]; then
+        return 1
+    elif [ "$oldhash" != "$newhash" ]; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+while [ "$#" -gt 0 ]; do
+    case "$1" in
+    --builddir=*)
+        dxport_builddir="$(dxport_absolute_path "${1#--builddir=}")"
+        shift
+        ;;
+    --help)
+        dxport_help
+        exit
+        ;;
+    --host=*)
+        host="${1#--host=}"
+        shift
+        ;;
+    --sysroot=*)
+        SYSROOT="$(dxport_absolute_path "${1#--sysroot=}")"
+        shift
+        ;;
+    --)
+        shift
+        break
+        ;;
+    -*)
+        dxport_error "Unexpected option '$1'"
+        ;;
+    *)
+        break
+    esac
+done
+
+if [ "$#" -eq 0 ]; then
+    dxport_error "No command given"
+fi
+
+export dxport_sysroot="$SYSROOT"
+export PKG_CONFIG="$dxportdir/dxport-pkg-config"
+
+case "$1" in
+install)
+    [ -n "$host" ] || dxport_error "No host given"
+    [ -n "${SYSROOT+x}" ] || dxport_error "No sysroot given"
+    shift
+
+    while getopts dfkuDU-: dxport_arg; do
+        case "$dxport_arg" in
+        d) dxport_install_no_dependencies=yes ;;
+        f) dxport_install_force_install=yes ;;
+        k) dxport_install_keep_going=yes ;;
+        u) dxport_install_update_only=yes ;;
+        D) dxport_install_no_update_dependencies=yes ;;
+        U) dxport_install_no_update=yes ;;
+        -)
+            case "$OPTARG" in
+            force-install) dxport_install_force_install=yes ;;
+            keep-going) dxport_install_keep_going=yes ;;
+            no-dependencies) dxport_install_no_dependencies=yes ;;
+            no-update) dxport_install_no_update=yes ;;
+            no-update-dependencies) dxport_install_no_update_dependencies=yes ;;
+            update-only) dxport_install_update_only=yes ;;
+            *) dxport_error "Invalid option '--$OPTARG'"
+            esac ;;
+        *) exit 1
+        esac
+    done
+
+    shift $((OPTIND - 1))
+
+    dxport_requested_ports="$(echo "$*" | sed "s/\\ball\\b/$(echo $dxport_all)/g")"
+    dxport_ports="$(dxport_resolve_dependencies $dxport_requested_ports)" ||
+            dxport_error "Could not resolve dependencies"
+    echo "Resolved dependencies:$dxport_ports"
+
+    for port in $dxport_ports; do
+        dxport_install "$port"
+        if [ $? != 0 ]; then
+            if [ "$dxport_install_keep_going" = yes ]; then
+                dxport_install_failed="$dxport_install_failed $port"
+            else
+                dxport_error "Failed to install $port"
+            fi
+        fi
+    done
+
+    if [ -n "$dxport_install_failed" ]; then
+        dxport_error "Failed to install the following ports:$dxport_install_failed"
+    fi
+    ;;
+dump)
+    shift
+    while getopts d-: dxport_arg; do
+        case "$dxport_arg" in
+        d) dxport_no_dependencies=yes ;;
+        -)
+            case "$OPTARG" in
+            no-dependencies) dxport_no_dependencies=yes ;;
+            *) dxport_error "Invalid option '--$OPTARG'"
+            esac ;;
+        *) exit 1
+        esac
+    done
+
+    shift $((OPTIND - 1))
+
+    if [ "$#" = 0 ]; then
+        dxport_ports=$(echo $dxport_allports)
+    else
+        dxport_requested_ports=$(echo "$*" | sed "s/\\ball\\b/$(echo $dxport_allports)/g")
+        if [ "$dxport_no_dependencies" = yes ]; then
+            dxport_ports=$dxport_requested_ports
+        else
+            dxport_ports=$(dxport_resolve_dependencies $dxport_requested_ports) ||
+                    dxport_error "Could not resolve dependencies"
+        fi
+    fi
+    echo "Dumping ports: $dxport_ports"
+
+    mkdir -p "$dxport_builddir/dump"
+    cp "$dxportdir/dxport" "$dxportdir/dxport-pkg-config" "$dxport_builddir/dump"
+    for port in $dxport_ports; do
+        dxport_dump "$port" || dxport_error "Failed to dump port: $port"
+    done
+    ;;
+*)
+    dxport_error "Unknown command '$1'"
+esac

@@ -1,0 +1,74 @@
+From 38f3b22028f675cb0feb35c784c2697a1e87daa0 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dennis=20W=C3=B6lfing?= <denniswoelfing@gmx.de>
+Date: Tue, 25 Feb 2020 14:07:56 +0100
+Subject: [PATCH] Port to Dennix.
+
+---
+ Makefile      | 3 +--
+ src/nyancat.c | 8 +++++++-
+ 2 files changed, 8 insertions(+), 3 deletions(-)
+
+diff --git a/Makefile b/Makefile
+index 069b06c..0f7381a 100644
+--- a/Makefile
++++ b/Makefile
+@@ -33,7 +33,6 @@ distcheck: $(distdir).tar.gz
+ 	@echo "*** Package $(distdir).tar.gz is ready for distribution."
+ 
+ install: all
+-	install src/nyancat /usr/bin/${package}
+-	gzip -9 -c < nyancat.1 > /usr/share/man/man1/nyancat.1.gz
++	install src/nyancat $(DESTDIR)/usr/bin/${package}
+ 
+ .PHONY: FORCE all clean check dist distcheck install
+diff --git a/src/nyancat.c b/src/nyancat.c
+index 537225c..fbea636 100644
+--- a/src/nyancat.c
++++ b/src/nyancat.c
+@@ -213,6 +213,7 @@ void SIGPIPE_handler(int sig) {
+ 	finish();
+ }
+ 
++#ifdef SIGWINCH
+ void SIGWINCH_handler(int sig) {
+ 	(void)sig;
+ 	struct winsize w;
+@@ -232,6 +233,7 @@ void SIGWINCH_handler(int sig) {
+ 
+ 	signal(SIGWINCH, SIGWINCH_handler);
+ }
++#endif
+ 
+ /*
+  * Telnet requires us to send a specific sequence
+@@ -612,6 +614,8 @@ int main(int argc, char ** argv) {
+ 			ttype = 7; /* No color support, only 40 columns */
+ 		} else if (!strncmp(term, "st", 2)) {
+ 			ttype = 1; /* suckless simple terminal is xterm-256color-compatible */
++		} else if (!strcmp(term, "cobalt")) {
++			ttype = 1;
+ 		}
+ 	}
+ 
+@@ -625,7 +629,9 @@ int main(int argc, char ** argv) {
+ 
+ 	/* Handle window changes */
+ 	if (!telnet) {
++#ifdef SIGWINCH
+ 		signal(SIGWINCH, SIGWINCH_handler);
++#endif
+ 	}
+ 
+ 	switch (ttype) {
+@@ -901,7 +907,7 @@ int main(int argc, char ** argv) {
+ 			 * The \033[0m prevents the Apple ][ from flipping everything, but
+ 			 * makes the whole nyancat less bright on the vt220
+ 			 */
+-			printf("\033[1;37mYou have nyaned for %0.0f seconds!\033[J\033[0m", diff);
++			printf("\033[1;37mYou have nyaned for %d seconds!\033[J\033[0m", (int) diff);
+ 		}
+ 		/* Reset the last color so that the escape sequences rewrite */
+ 		last = 0;
+-- 
+2.25.1
+

@@ -6,6 +6,5 @@
 RemoteSystemsTempFiles/
 
 build/
-ports/
 sysroot/
 *.iso

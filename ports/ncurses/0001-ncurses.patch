@@ -1,0 +1,68 @@
+diff -Naur a/config.sub b/config.sub
+--- a/config.sub	2019-09-12 01:56:40.000000000 +0200
++++ b/config.sub	2021-05-08 17:28:00.585471093 +0200
+@@ -1341,7 +1341,7 @@
+ 	gnu* | bsd* | mach* | minix* | genix* | ultrix* | irix* \
+ 	     | *vms* | esix* | aix* | cnk* | sunos | sunos[34]*\
+ 	     | hpux* | unos* | osf* | luna* | dgux* | auroraux* | solaris* \
+-	     | sym* | kopensolaris* | plan9* \
++	     | sym* | kopensolaris* | plan9* | cobalt* \
+ 	     | amigaos* | amigados* | msdos* | newsos* | unicos* | aof* \
+ 	     | aos* | aros* | cloudabi* | sortix* | twizzler* \
+ 	     | nindy* | vxsim* | vxworks* | ebmon* | hms* | mvs* \
+diff -Naur a/configure b/configure
+--- a/configure	2020-02-08 22:06:19.000000000 +0100
++++ b/configure	2021-05-25 11:15:52.479339305 +0200
+@@ -9257,6 +9257,10 @@
+ 	cf_xopen_source="-D_DARWIN_C_SOURCE"
+ 	cf_XOPEN_SOURCE=
+ 	;;
++(cobalt*)
++	cf_xopen_source="-D_ALL_SOURCE"
++	cf_XOPEN_SOURCE=
++	;;
+ (freebsd*|dragonfly*|midnightbsd*)
+ 	# 5.x headers associate
+ 	#	_XOPEN_SOURCE=600 with _POSIX_C_SOURCE=200112L
+@@ -10977,7 +10981,7 @@
+ #include "confdefs.h"
+ 
+ #include <sys/types.h>
+-#include <sys/signal.h>
++#include <signal.h>
+ 
+ int
+ main (void)
+diff -Naur a/ncurses/tty/lib_twait.c b/ncurses/tty/lib_twait.c
+--- a/ncurses/tty/lib_twait.c	2020-02-03 00:34:34.000000000 +0100
++++ b/ncurses/tty/lib_twait.c	2021-05-08 17:35:27.465464943 +0200
+@@ -76,6 +76,8 @@
+ #endif
+ #undef CUR
+ 
++#include <time.h>
++
+ MODULE_ID("$Id: lib_twait.c,v 1.74 2020/02/02 23:34:34 tom Exp $")
+ 
+ static long
+diff -Naur a/progs/infocmp.c b/progs/infocmp.c
+--- a/progs/infocmp.c	2020-02-03 00:34:34.000000000 +0100
++++ b/progs/infocmp.c	2021-05-09 13:00:52.585965968 +0200
+@@ -1313,7 +1313,7 @@
+ 	    for (sp = term->Strings[n];
+ 		 *sp != 0 && TP_LIMIT > 2;
+ 		 sp++) {
+-		if (isascii(UChar(*sp))
++		if (UChar(*sp) <= 127
+ 		    && isprint(UChar(*sp))
+ 		    && *sp != '\\'
+ 		    && *sp != '"')
+@@ -1741,7 +1741,7 @@
+ 	}
+     }
+ 
+-    maxterms = (size_t) (argc + 2 - optind);
++    maxterms = (size_t) (argc + 3 - optind);
+     if ((tfile = typeMalloc(path, maxterms)) == 0)
+ 	failed("tfile");
+     if ((tname = typeCalloc(char *, maxterms)) == 0)

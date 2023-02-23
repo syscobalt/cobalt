@@ -1,0 +1,12 @@
+diff -Naur a/config.sub b/config.sub
+--- a/config.sub	2019-01-31 21:43:20.000000000 +0100
++++ b/config.sub	2019-10-24 15:25:29.240403782 +0200
+@@ -1368,7 +1368,7 @@
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -auroraux* | -solaris* \
+ 	      | -sym* | -kopensolaris* | -plan9* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+-	      | -aos* | -aros* | -cloudabi* | -sortix* \
++	      | -aos* | -aros* | -cloudabi* | -sortix* | -cobalt* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -knetbsd* | -mirbsd* | -netbsd* \

@@ -1,0 +1,24 @@
+diff -Naur a/build-aux/config.sub b/build-aux/config.sub
+--- a/build-aux/config.sub	2021-07-15 05:47:29.000000000 +0200
++++ b/build-aux/config.sub	2022-07-31 17:10:56.098854949 +0200
+@@ -1713,7 +1713,7 @@
+ 	     | hpux* | unos* | osf* | luna* | dgux* | auroraux* | solaris* \
+ 	     | sym* |  plan9* | psp* | sim* | xray* | os68k* | v88r* \
+ 	     | hiux* | abug | nacl* | netware* | windows* \
+-	     | os9* | macos* | osx* | ios* \
++	     | os9* | macos* | osx* | ios* | cobalt* \
+ 	     | mpw* | magic* | mmixware* | mon960* | lnews* \
+ 	     | amigaos* | amigados* | msdos* | newsos* | unicos* | aof* \
+ 	     | aos* | aros* | cloudabi* | sortix* | twizzler* \
+diff -Naur a/Makefile.in b/Makefile.in
+--- a/Makefile.in	2021-08-14 13:36:30.000000000 +0200
++++ b/Makefile.in	2022-07-31 17:11:31.304162543 +0200
+@@ -1626,7 +1626,7 @@
+ # along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ #
+ AUTOMAKE_OPTIONS = gnu 1.12
+-SUBDIRS = po lib doc src tests gnulib-tests
++SUBDIRS = po lib doc src tests
+ EXTRA_DIST = \
+   .mailmap		\
+   ChangeLog-2009	\

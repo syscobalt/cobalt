@@ -1,0 +1,732 @@
+diff -Naur a/build-scripts/config.sub b/build-scripts/config.sub
+--- a/build-scripts/config.sub	2020-12-21 18:44:36.000000000 +0100
++++ b/build-scripts/config.sub	2021-06-27 17:14:37.522176312 +0200
+@@ -1411,7 +1411,7 @@
+ 	-gnu* | -bsd* | -mach* | -minix* | -genix* | -ultrix* | -irix* \
+ 	      | -*vms* | -sco* | -esix* | -isc* | -aix* | -cnk* | -sunos | -sunos[34]*\
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -auroraux* | -solaris* \
+-	      | -sym* | -kopensolaris* | -plan9* \
++	      | -sym* | -kopensolaris* | -plan9* | -cobalt* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+ 	      | -aos* | -aros* | -cloudabi* | -sortix* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+diff -Naur a/configure b/configure
+--- a/configure	2020-12-21 18:44:36.000000000 +0100
++++ b/configure	2021-06-27 17:30:51.698829553 +0200
+@@ -877,6 +877,7 @@
+ enable_video_kmsdrm
+ enable_kmsdrm_shared
+ enable_video_dummy
++enable_video_dxui
+ enable_video_opengl
+ enable_video_opengles
+ enable_video_opengles1
+@@ -1659,6 +1660,7 @@
+   --enable-video-kmsdrm   use KMSDRM video driver [[default=no]]
+   --enable-kmsdrm-shared  dynamically load kmsdrm support [[default=yes]]
+   --enable-video-dummy    use dummy video driver [[default=yes]]
++  --enable-video-dxui     use dxui video driver [[default=yes]]
+   --enable-video-opengl   include OpenGL support [[default=yes]]
+   --enable-video-opengles include OpenGL ES support [[default=yes]]
+   --enable-video-opengles1
+@@ -20178,8 +20180,6 @@
+ /usr/local/include/X11R5
+ /usr/local/include/X11R4
+ 
+-/opt/X11/include
+-
+ /usr/X386/include
+ /usr/x386/include
+ /usr/XFree86/include/X11
+@@ -22183,6 +22183,69 @@
+     fi
+ }
+ 
++CheckDxui()
++{
++    # Check whether --enable-video-dxui was given.
++if test "${enable_video_dxui+set}" = set; then :
++  enableval=$enable_video_dxui;
++else
++  enable_video_dxui=yes
++fi
++
++    if test x$enable_video = xyes && test x$enable_video_dxui = xyes; then
++        have_dxui=no
++        { $as_echo "$as_me:${as_lineno-$LINENO}: checking for dxui_initialize in -ldxui" >&5
++$as_echo_n "checking for dxui_initialize in -ldxui... " >&6; }
++if ${ac_cv_lib_dxui_dxui_initialize+:} false; then :
++  $as_echo_n "(cached) " >&6
++else
++  ac_check_lib_save_LIBS=$LIBS
++LIBS="-ldxui  $LIBS"
++cat confdefs.h - <<_ACEOF >conftest.$ac_ext
++/* end confdefs.h.  */
++
++/* Override any GCC internal prototype to avoid an error.
++   Use char because int might match the return type of a GCC
++   builtin and then its argument prototype would still apply.  */
++#ifdef __cplusplus
++extern "C"
++#endif
++char dxui_initialize ();
++int
++main ()
++{
++return dxui_initialize ();
++  ;
++  return 0;
++}
++_ACEOF
++if ac_fn_c_try_link "$LINENO"; then :
++  ac_cv_lib_dxui_dxui_initialize=yes
++else
++  ac_cv_lib_dxui_dxui_initialize=no
++fi
++rm -f core conftest.err conftest.$ac_objext \
++    conftest$ac_exeext conftest.$ac_ext
++LIBS=$ac_check_lib_save_LIBS
++fi
++{ $as_echo "$as_me:${as_lineno-$LINENO}: result: $ac_cv_lib_dxui_dxui_initialize" >&5
++$as_echo "$ac_cv_lib_dxui_dxui_initialize" >&6; }
++if test "x$ac_cv_lib_dxui_dxui_initialize" = xyes; then :
++  have_dxui=yes
++fi
++
++        if test $have_dxui = yes; then
++            EXTRA_LDFLAGS="$EXTRA_LDFLAGS -ldxui"
++
++$as_echo "#define SDL_VIDEO_DRIVER_DXUI 1" >>confdefs.h
++
++            SOURCES="$SOURCES $srcdir/src/video/dxui/*.c"
++            SUMMARY_video="$SUMMARY_video dxui"
++            have_video=yes
++        fi
++    fi
++}
++
+ CheckQNXVideo()
+ {
+     if test x$enable_video = xyes; then
+@@ -24690,7 +24753,7 @@
+ have_locale=no
+ 
+ case "$host" in
+-    *-*-linux*|*-*-uclinux*|*-*-gnu*|*-*-k*bsd*-gnu|*-*-bsdi*|*-*-freebsd*|*-*-dragonfly*|*-*-netbsd*|*-*-openbsd*|*-*-sysv5*|*-*-solaris*|*-*-hpux*|*-*-aix*|*-*-minix*|*-*-nto*)
++    *-*-linux*|*-*-uclinux*|*-*-gnu*|*-*-k*bsd*-gnu|*-*-bsdi*|*-*-freebsd*|*-*-dragonfly*|*-*-netbsd*|*-*-openbsd*|*-*-sysv5*|*-*-solaris*|*-*-hpux*|*-*-aix*|*-*-minix*|*-*-nto*|*-*-cobalt*)
+         case "$host" in
+             *-*-android*)
+                 # Android
+@@ -24751,6 +24814,7 @@
+         CheckRPI
+         CheckX11
+         CheckDirectFB
++        CheckDxui
+         CheckKMSDRM
+         CheckOpenGLX11
+         CheckOpenGLESX11
+diff -Naur a/configure.ac b/configure.ac
+--- a/configure.ac	2020-12-21 18:44:36.000000000 +0100
++++ b/configure.ac	2021-06-27 17:17:53.798840279 +0200
+@@ -2295,6 +2295,24 @@
+     fi
+ }
+ 
++CheckDxui()
++{
++    AC_ARG_ENABLE([video-dxui],
++AS_HELP_STRING([--enable-video-dxui], [use dxui video driver [[default=yes]]]),
++                  , [enable_video_dxui=yes])
++    if test x$enable_video = xyes && test x$enable_video_dxui = xyes; then
++        have_dxui=no
++        AC_CHECK_LIB([dxui], [dxui_initialize], [have_dxui=yes])
++        if test $have_dxui = yes; then
++            EXTRA_LDFLAGS="$EXTRA_LDFLAGS -ldxui"
++            AC_DEFINE([SDL_VIDEO_DRIVER_DXUI], [1], [ ])
++            SOURCES="$SOURCES $srcdir/src/video/dxui/*.c"
++            SUMMARY_video="$SUMMARY_video dxui"
++            have_video=yes
++        fi
++    fi
++}
++
+ dnl Set up the QNX video driver if enabled
+ CheckQNXVideo()
+ {
+@@ -3496,7 +3514,7 @@
+ 
+ dnl Set up the configuration based on the host platform!
+ case "$host" in
+-    *-*-linux*|*-*-uclinux*|*-*-gnu*|*-*-k*bsd*-gnu|*-*-bsdi*|*-*-freebsd*|*-*-dragonfly*|*-*-netbsd*|*-*-openbsd*|*-*-sysv5*|*-*-solaris*|*-*-hpux*|*-*-aix*|*-*-minix*|*-*-nto*)
++    *-*-linux*|*-*-uclinux*|*-*-gnu*|*-*-k*bsd*-gnu|*-*-bsdi*|*-*-freebsd*|*-*-dragonfly*|*-*-netbsd*|*-*-openbsd*|*-*-sysv5*|*-*-solaris*|*-*-hpux*|*-*-aix*|*-*-minix*|*-*-nto*|*-*-cobalt*)
+         case "$host" in
+             *-*-android*)
+                 # Android
+@@ -3555,6 +3573,7 @@
+         CheckRPI
+         CheckX11
+         CheckDirectFB
++        CheckDxui
+         CheckKMSDRM
+         CheckOpenGLX11
+         CheckOpenGLESX11
+diff -Naur a/include/SDL_config.h.in b/include/SDL_config.h.in
+--- a/include/SDL_config.h.in	2020-12-21 18:44:36.000000000 +0100
++++ b/include/SDL_config.h.in	2021-06-27 17:19:45.378838743 +0200
+@@ -344,6 +344,7 @@
+ #undef SDL_VIDEO_DRIVER_DIRECTFB
+ #undef SDL_VIDEO_DRIVER_DIRECTFB_DYNAMIC
+ #undef SDL_VIDEO_DRIVER_DUMMY
++#undef SDL_VIDEO_DRIVER_DXUI
+ #undef SDL_VIDEO_DRIVER_WINDOWS
+ #undef SDL_VIDEO_DRIVER_WAYLAND
+ #undef SDL_VIDEO_DRIVER_WAYLAND_QT_TOUCH
+diff -Naur a/src/dynapi/SDL_dynapi.h b/src/dynapi/SDL_dynapi.h
+--- a/src/dynapi/SDL_dynapi.h	2020-12-21 18:44:36.000000000 +0100
++++ b/src/dynapi/SDL_dynapi.h	2021-06-27 17:35:54.322158754 +0200
+@@ -57,6 +57,8 @@
+ #define SDL_DYNAMIC_API 0
+ #elif defined(__clang_analyzer__)
+ #define SDL_DYNAMIC_API 0  /* Turn off for static analysis, so reports are more clear. */
++#elif __cobalt__ /* Dynamic linking is not supported. */
++#define SDL_DYNAMIC_API 0
+ #endif
+ 
+ /* everyone else. This is where we turn on the API if nothing forced it off. */
+diff -Naur a/src/misc/unix/SDL_sysurl.c b/src/misc/unix/SDL_sysurl.c
+--- a/src/misc/unix/SDL_sysurl.c	2020-12-21 18:44:36.000000000 +0100
++++ b/src/misc/unix/SDL_sysurl.c	2021-06-27 17:40:17.998821797 +0200
+@@ -31,6 +31,9 @@
+ int
+ SDL_SYS_OpenURL(const char *url)
+ {
++#ifdef __cobalt__
++    return SDL_Unsupported();
++#else
+     const pid_t pid1 = fork();
+     if (pid1 == 0) {  /* child process */
+         /* Notice this is vfork and not fork! */
+@@ -64,6 +67,7 @@
+     }
+ 
+     return 0;
++#endif
+ }
+ 
+ /* vi: set ts=4 sw=4 expandtab: */
+diff -Naur a/src/SDL.c b/src/SDL.c
+--- a/src/SDL.c	2020-12-21 18:44:36.000000000 +0100
++++ b/src/SDL.c	2021-06-27 17:26:07.162166813 +0200
+@@ -527,6 +527,8 @@
+     return "iOS";
+ #elif __PSP__
+     return "PlayStation Portable";
++#elif __cobalt__
++    return "Cobalt";
+ #else
+     return "Unknown (see SDL_platform.h)";
+ #endif
+diff -Naur a/src/video/dxui/dxui.c b/src/video/dxui/dxui.c
+--- a/src/video/dxui/dxui.c	1970-01-01 01:00:00.000000000 +0100
++++ b/src/video/dxui/dxui.c	2021-06-27 17:49:18.082147688 +0200
+@@ -0,0 +1,476 @@
++/*
++  Copyright (C) 2021 Dennis Wölfing
++
++  This software is provided 'as-is', without any express or implied
++  warranty.  In no event will the authors be held liable for any damages
++  arising from the use of this software.
++
++  Permission is granted to anyone to use this software for any purpose,
++  including commercial applications, and to alter it and redistribute it
++  freely, subject to the following restrictions:
++
++  1. The origin of this software must not be misrepresented; you must not
++     claim that you wrote the original software. If you use this software
++     in a product, an acknowledgment in the product documentation would be
++     appreciated but is not required.
++  2. Altered source versions must be plainly marked as such, and must not be
++     misrepresented as being the original software.
++  3. This notice may not be removed or altered from any source distribution.
++*/
++#include "../../SDL_internal.h"
++
++#if SDL_VIDEO_DRIVER_DXUI
++
++#include <dxui.h>
++#include <limits.h>
++#include <wchar.h>
++#include <cobalt/kbkeys.h>
++#include "SDL_video.h"
++#include "../SDL_sysvideo.h"
++#include "../../events/SDL_keyboard_c.h"
++#include "../../events/SDL_mouse_c.h"
++#include "../../events/SDL_windowevents_c.h"
++
++static SDL_VideoDevice* createDevice(int devindex);
++static void freeDevice(_THIS);
++
++VideoBootStrap Dxui_bootstrap = {
++    "dxui", "Cobalt User Interface", createDevice
++};
++
++static int VideoInit(_THIS);
++static void VideoQuit(_THIS);
++static int GetDisplayBounds(_THIS, SDL_VideoDisplay* display, SDL_Rect* rect);
++static int CreateSDLWindow(_THIS, SDL_Window* window);
++static void SetWindowTitle(_THIS, SDL_Window* window);
++static void SetWindowSize(_THIS, SDL_Window* window);
++static void ShowWindow(_THIS, SDL_Window* window);
++static void HideWindow(_THIS, SDL_Window* window);
++static void DestroyWindow(_THIS, SDL_Window* window);
++static int CreateWindowFramebuffer(_THIS, SDL_Window* window, Uint32* format, void** pixels, int* pitch);
++static int UpdateWindowFramebuffer(_THIS, SDL_Window* window, const SDL_Rect* rects, int numrects);
++static void DestroyWindowFramebuffer(_THIS, SDL_Window* window);
++static void PumpEvents(_THIS);
++static int ShowMessageBox(_THIS, const SDL_MessageBoxData* messageboxdata, int* buttonid);
++
++static int SetRelativeMouseMode(SDL_bool enabled);
++
++static void onKeyEvent(dxui_window* win, dxui_key_event* event);
++static void onMouseEvent(dxui_control* control, dxui_mouse_event* event);
++static void onCloseEvent(dxui_window* win);
++static void onResizeEvent(dxui_window* win, dxui_resize_event* event);
++
++static SDL_VideoDevice* createDevice(int devindex) {
++    SDL_VideoDevice* device = SDL_calloc(1, sizeof(SDL_VideoDevice));
++    if (!device) {
++        SDL_OutOfMemory();
++        return 0;
++    }
++
++    device->VideoInit = VideoInit;
++    device->VideoQuit = VideoQuit;
++    device->GetDisplayBounds = GetDisplayBounds;
++    device->CreateSDLWindow = CreateSDLWindow;
++    device->SetWindowTitle = SetWindowTitle;
++    device->SetWindowSize = SetWindowSize;
++    device->ShowWindow = ShowWindow;
++    device->HideWindow = HideWindow;
++    device->DestroyWindow = DestroyWindow;
++    device->CreateWindowFramebuffer = CreateWindowFramebuffer;
++    device->UpdateWindowFramebuffer = UpdateWindowFramebuffer;
++    device->DestroyWindowFramebuffer = DestroyWindowFramebuffer;
++    device->PumpEvents = PumpEvents;
++    device->ShowMessageBox = ShowMessageBox;
++
++    device->free = freeDevice;
++
++    return device;
++}
++
++static void freeDevice(_THIS) {
++    SDL_free(_this);
++}
++
++static int VideoInit(_THIS) {
++    dxui_context* context;
++    dxui_dim displayDim;
++    SDL_DisplayMode mode;
++    SDL_Mouse* mouse;
++
++    context = dxui_initialize(0);
++    if (!context) return -1;
++    _this->driverdata = context;
++
++    displayDim = dxui_get_display_dim(context);
++
++    mode.format = SDL_PIXELFORMAT_ARGB8888;
++    mode.w = displayDim.width;
++    mode.h = displayDim.height;
++    mode.refresh_rate = 0;
++    mode.driverdata = NULL;
++
++    if (SDL_AddBasicVideoDisplay(&mode) < 0) return -1;
++
++    mouse = SDL_GetMouse();
++    mouse->SetRelativeMouseMode = SetRelativeMouseMode;
++    mouse->driverdata = _this;
++
++    return 0;
++}
++
++static void VideoQuit(_THIS) {
++    dxui_context* context = _this->driverdata;
++    dxui_shutdown(context);
++    _this->driverdata = NULL;
++}
++
++static int GetDisplayBounds(_THIS, SDL_VideoDisplay* display, SDL_Rect* rect) {
++    dxui_context* context = _this->driverdata;
++    dxui_dim displayDim = dxui_get_display_dim(context);
++    rect->x = 0;
++    rect->y = 0;
++    rect->w = displayDim.width;
++    rect->h = displayDim.height;
++    return 0;
++}
++
++static int CreateSDLWindow(_THIS, SDL_Window* window) {
++    dxui_context* context = _this->driverdata;
++    dxui_rect rect;
++    dxui_window* win;
++
++    rect.x = window->x;
++    rect.y = window->y;
++    rect.width = window->w;
++    rect.height = window->h;
++
++    win = dxui_create_window(context, rect, "SDL window", 0);
++    if (!win) return -1;
++
++    dxui_set_user_data(win, window);
++    dxui_set_event_handler(win, DXUI_EVENT_KEY, onKeyEvent);
++    dxui_set_event_handler(win, DXUI_EVENT_MOUSE, onMouseEvent);
++    dxui_set_event_handler(win, DXUI_EVENT_WINDOW_CLOSE, onCloseEvent);
++    dxui_set_event_handler(win, DXUI_EVENT_WINDOW_RESIZED, onResizeEvent);
++
++    window->driverdata = win;
++    return 0;
++}
++
++static void SetWindowTitle(_THIS, SDL_Window* window) {
++    dxui_window* win = window->driverdata;
++    dxui_set_text(win, window->title);
++}
++
++static void SetWindowSize(_THIS, SDL_Window* window) {
++    dxui_window* win = window->driverdata;
++    dxui_dim dim;
++    dim.width = window->w;
++    dim.height = window->h;
++    dxui_resize_window(win, dim);
++}
++
++static void ShowWindow(_THIS, SDL_Window* window) {
++    dxui_window* win = window->driverdata;
++    dxui_show(win);
++}
++
++static void HideWindow(_THIS, SDL_Window* window) {
++    dxui_window* win = window->driverdata;
++    dxui_hide(win);
++}
++
++static void DestroyWindow(_THIS, SDL_Window* window) {
++    dxui_window* win = window->driverdata;
++    if (!win) return;
++    dxui_close(win);
++}
++
++static int CreateWindowFramebuffer(_THIS, SDL_Window* window, Uint32* format, void** pixels, int* pitch) {
++    dxui_window* win = window->driverdata;
++    dxui_dim dim;
++    dxui_color* framebuffer;
++
++    dim.width = window->w;
++    dim.height = window->h;
++
++    framebuffer = dxui_get_framebuffer(win, dim);
++    if (!framebuffer) return -1;
++
++    *format = SDL_PIXELFORMAT_ARGB8888;
++    *pixels = framebuffer;
++    *pitch = dim.width * sizeof(dxui_color);
++    return 0;
++}
++
++static int UpdateWindowFramebuffer(_THIS, SDL_Window* window, const SDL_Rect* rects, int numrects) {
++    dxui_window* win = window->driverdata;
++
++    for (int i = 0; i < numrects; i++) {
++        dxui_rect rect;
++        rect.x = rects[i].x;
++        rect.y = rects[i].y;
++        rect.width = rects[i].w;
++        rect.height = rects[i].h;
++
++        dxui_update_framebuffer(win, rect);
++    }
++    return 0;
++}
++
++static void DestroyWindowFramebuffer(_THIS, SDL_Window* window) {
++    dxui_window* win = window->driverdata;
++    dxui_release_framebuffer(win);
++}
++
++static void PumpEvents(_THIS) {
++    dxui_context* context = _this->driverdata;
++    dxui_pump_events(context, DXUI_PUMP_CLEAR, -1);
++}
++
++static void onButtonClick(dxui_control* control, dxui_mouse_event* event) {
++    dxui_container* container = dxui_get_owner(control);
++    int* result = dxui_get_user_data(container);
++    const int* value = dxui_get_user_data(control);
++
++    *result = *value;
++    dxui_set_user_data(container, NULL);
++}
++
++static void onCloseButtonClick(dxui_window* win) {
++    int* result = dxui_get_user_data(win);
++    *result = -1;
++    dxui_set_user_data(win, NULL);
++}
++
++static int ShowMessageBox(_THIS, const SDL_MessageBoxData* messageboxdata, int* buttonid) {
++    dxui_context* context = _this->driverdata;
++    dxui_dim displayDim = dxui_get_display_dim(context);
++    dxui_window* win;
++    dxui_label* label;
++    dxui_rect buttonRect;
++
++    dxui_rect rect = {{ 10, 10, messageboxdata->numbuttons * 110, 16 }};
++    dxui_rect textRect = dxui_get_text_rect(messageboxdata->message, rect, DXUI_TEXT_CENTERED);
++    if (textRect.x < 0) {
++        textRect.x = 10;
++    }
++
++    rect.width = textRect.width + 2 * textRect.x;
++    rect.height = 100;
++    rect.x = displayDim.width / 2 - rect.width / 2;
++    rect.y = displayDim.height / 2 - rect.height / 2;
++
++    win = dxui_create_window(context, rect, messageboxdata->title, DXUI_WINDOW_NO_RESIZE);
++    if (!win) return -1;
++    dxui_set_event_handler(win, DXUI_EVENT_WINDOW_CLOSE_BUTTON, onCloseButtonClick);
++    dxui_set_user_data(win, buttonid);
++
++    label = dxui_create_label(textRect, messageboxdata->message);
++    if (!label) {
++        dxui_close(win);
++        return -1;
++    }
++    dxui_add_control(win, label);
++
++    buttonRect.x = (rect.width - messageboxdata->numbuttons * 110 - 10) / 2 + 10;
++    buttonRect.y = 70;
++    buttonRect.width = 100;
++    buttonRect.height = 20;
++
++    for (int i = 0; i < messageboxdata->numbuttons; i++) {
++        dxui_button* button = dxui_create_button(buttonRect, messageboxdata->buttons[i].text);
++        if (!button) {
++            dxui_close(win);
++            return -1;
++        }
++        dxui_add_control(win, button);
++        dxui_set_event_handler(button, DXUI_EVENT_MOUSE_CLICK, onButtonClick);
++        dxui_set_user_data(button, (void*) &messageboxdata->buttons[i].buttonid);
++        buttonRect.x += 110;
++    }
++
++    while (dxui_get_user_data(win)) {
++        dxui_pump_events(context, DXUI_PUMP_ONCE, -1);
++    }
++
++    dxui_close(win);
++    return 0;
++}
++
++static int SetRelativeMouseMode(SDL_bool enabled) {
++    SDL_VideoDevice* _this = SDL_GetMouse()->driverdata;
++
++    for (SDL_Window* window = _this->windows; window; window = window->next) {
++        dxui_window* win = window->driverdata;
++        dxui_set_relative_mouse(win, enabled);
++    }
++    return 0;
++}
++
++static SDL_Scancode translateKey(int key) {
++    switch (key) {
++    case KB_ESCAPE: return SDL_SCANCODE_ESCAPE;
++    case KB_1: return SDL_SCANCODE_1;
++    case KB_2: return SDL_SCANCODE_2;
++    case KB_3: return SDL_SCANCODE_3;
++    case KB_4: return SDL_SCANCODE_4;
++    case KB_5: return SDL_SCANCODE_5;
++    case KB_6: return SDL_SCANCODE_6;
++    case KB_7: return SDL_SCANCODE_7;
++    case KB_8: return SDL_SCANCODE_8;
++    case KB_9: return SDL_SCANCODE_9;
++    case KB_0: return SDL_SCANCODE_0;
++    case KB_SYMBOL1: return SDL_SCANCODE_MINUS;
++    case KB_SYMBOL2: return SDL_SCANCODE_EQUALS;
++    case KB_BACKSPACE: return SDL_SCANCODE_BACKSPACE;
++    case KB_TAB: return SDL_SCANCODE_TAB;
++    case KB_Q: return SDL_SCANCODE_Q;
++    case KB_W: return SDL_SCANCODE_W;
++    case KB_E: return SDL_SCANCODE_E;
++    case KB_R: return SDL_SCANCODE_R;
++    case KB_T: return SDL_SCANCODE_T;
++    case KB_Y: return SDL_SCANCODE_Y;
++    case KB_U: return SDL_SCANCODE_U;
++    case KB_I: return SDL_SCANCODE_I;
++    case KB_O: return SDL_SCANCODE_O;
++    case KB_P: return SDL_SCANCODE_P;
++    case KB_SYMBOL3: return SDL_SCANCODE_LEFTBRACKET;
++    case KB_SYMBOL4: return SDL_SCANCODE_RIGHTBRACKET;
++    case KB_ENTER: return SDL_SCANCODE_RETURN;
++    case KB_LCONTROL: return SDL_SCANCODE_LCTRL;
++    case KB_A: return SDL_SCANCODE_A;
++    case KB_S: return SDL_SCANCODE_S;
++    case KB_D: return SDL_SCANCODE_D;
++    case KB_F: return SDL_SCANCODE_F;
++    case KB_G: return SDL_SCANCODE_G;
++    case KB_H: return SDL_SCANCODE_H;
++    case KB_J: return SDL_SCANCODE_J;
++    case KB_K: return SDL_SCANCODE_K;
++    case KB_L: return SDL_SCANCODE_L;
++    case KB_SYMBOL5: return SDL_SCANCODE_SEMICOLON;
++    case KB_SYMBOL6: return SDL_SCANCODE_APOSTROPHE;
++    case KB_SYMBOL7: return SDL_SCANCODE_GRAVE;
++    case KB_LSHIFT: return SDL_SCANCODE_LSHIFT;
++    case KB_SYMBOL8: return SDL_SCANCODE_BACKSLASH;
++    case KB_Z: return SDL_SCANCODE_Z;
++    case KB_X: return SDL_SCANCODE_X;
++    case KB_C: return SDL_SCANCODE_C;
++    case KB_V: return SDL_SCANCODE_V;
++    case KB_B: return SDL_SCANCODE_B;
++    case KB_N: return SDL_SCANCODE_N;
++    case KB_M: return SDL_SCANCODE_M;
++    case KB_SYMBOL9: return SDL_SCANCODE_COMMA;
++    case KB_SYMBOL10: return SDL_SCANCODE_PERIOD;
++    case KB_SYMBOL11: return SDL_SCANCODE_SLASH;
++    case KB_RSHIFT: return SDL_SCANCODE_RSHIFT;
++    case KB_NUMPAD_MULT: return SDL_SCANCODE_KP_MULTIPLY;
++    case KB_LALT: return SDL_SCANCODE_LALT;
++    case KB_SPACE: return SDL_SCANCODE_SPACE;
++    case KB_CAPSLOCK: return SDL_SCANCODE_CAPSLOCK;
++    case KB_F1: return SDL_SCANCODE_F1;
++    case KB_F2: return SDL_SCANCODE_F2;
++    case KB_F3: return SDL_SCANCODE_F3;
++    case KB_F4: return SDL_SCANCODE_F4;
++    case KB_F5: return SDL_SCANCODE_F5;
++    case KB_F6: return SDL_SCANCODE_F6;
++    case KB_F7: return SDL_SCANCODE_F7;
++    case KB_F8: return SDL_SCANCODE_F8;
++    case KB_F9: return SDL_SCANCODE_F9;
++    case KB_F10: return SDL_SCANCODE_F10;
++    case KB_NUMLOCK: return SDL_SCANCODE_NUMLOCKCLEAR;
++    case KB_SCROLLLOCK: return SDL_SCANCODE_SCROLLLOCK;
++    case KB_NUMPAD7: return SDL_SCANCODE_KP_7;
++    case KB_NUMPAD8: return SDL_SCANCODE_KP_8;
++    case KB_NUMPAD9: return SDL_SCANCODE_KP_9;
++    case KB_NUMPAD_MINUS: return SDL_SCANCODE_KP_MINUS;
++    case KB_NUMPAD4: return SDL_SCANCODE_KP_4;
++    case KB_NUMPAD5: return SDL_SCANCODE_KP_5;
++    case KB_NUMPAD6: return SDL_SCANCODE_KP_6;
++    case KB_NUMPAD_PLUS: return SDL_SCANCODE_KP_PLUS;
++    case KB_NUMPAD1: return SDL_SCANCODE_KP_1;
++    case KB_NUMPAD2: return SDL_SCANCODE_KP_2;
++    case KB_NUMPAD3: return SDL_SCANCODE_KP_3;
++    case KB_NUMPAD0: return SDL_SCANCODE_KP_0;
++    case KB_NUMPAD_DOT: return SDL_SCANCODE_KP_PERIOD;
++    case KB_SYMBOL12: return SDL_SCANCODE_NONUSBACKSLASH;
++    case KB_F11: return SDL_SCANCODE_F11;
++    case KB_F12: return SDL_SCANCODE_F12;
++    case KB_NUMPAD_ENTER: return SDL_SCANCODE_KP_ENTER;
++    case KB_RCONTROL: return SDL_SCANCODE_RCTRL;
++    case KB_NUMPAD_DIV: return SDL_SCANCODE_KP_DIVIDE;
++    case KB_ALTGR: return SDL_SCANCODE_RALT;
++    case KB_HOME: return SDL_SCANCODE_HOME;
++    case KB_UP: return SDL_SCANCODE_UP;
++    case KB_PAGEUP: return SDL_SCANCODE_PAGEUP;
++    case KB_LEFT: return SDL_SCANCODE_LEFT;
++    case KB_RIGHT: return SDL_SCANCODE_RIGHT;
++    case KB_END: return SDL_SCANCODE_END;
++    case KB_DOWN: return SDL_SCANCODE_DOWN;
++    case KB_PAGEDOWN: return SDL_SCANCODE_PAGEDOWN;
++    case KB_INSERT: return SDL_SCANCODE_INSERT;
++    case KB_DELETE: return SDL_SCANCODE_DELETE;
++    case KB_LGUI: return SDL_SCANCODE_LGUI;
++    case KB_RGUI: return SDL_SCANCODE_RGUI;
++    default: return SDL_SCANCODE_UNKNOWN;
++    }
++}
++
++static void onKeyEvent(dxui_window* win, dxui_key_event* event) {
++    bool released = event->key < 0;
++    int key = event->key;
++    SDL_Scancode scancode;
++    if (released) {
++        key = -key;
++    }
++    scancode = translateKey(key);
++
++    if (scancode != SDL_SCANCODE_UNKNOWN) {
++        SDL_SendKeyboardKey(released ? SDL_RELEASED : SDL_PRESSED, scancode);
++    }
++
++    if (event->codepoint && SDL_EventState(SDL_TEXTINPUT, SDL_QUERY)) {
++        char buffer[MB_LEN_MAX];
++        mbstate_t ps = {0};
++        if (wcrtomb(buffer, event->codepoint, &ps) > 0) {
++            SDL_SendKeyboardText(buffer);
++        }
++    }
++}
++
++static void onMouseEvent(dxui_control* control, dxui_mouse_event* event) {
++    dxui_window* win = (dxui_window*) control;
++    SDL_Window* window = dxui_get_user_data(win);
++    bool relative = event->flags & DXUI_MOUSE_RELATIVE;
++
++    if (event->flags & DXUI_MOUSE_LEAVE) {
++        SDL_SetMouseFocus(NULL);
++        return;
++    }
++
++    SDL_SendMouseMotion(window, 0, relative, event->pos.x, event->pos.y);
++
++    SDL_SendMouseButton(window, 0, event->flags & DXUI_MOUSE_LEFT ? SDL_PRESSED : SDL_RELEASED, SDL_BUTTON_LEFT);
++    SDL_SendMouseButton(window, 0, event->flags & DXUI_MOUSE_RIGHT ? SDL_PRESSED : SDL_RELEASED, SDL_BUTTON_RIGHT);
++    SDL_SendMouseButton(window, 0, event->flags & DXUI_MOUSE_MIDDLE ? SDL_PRESSED : SDL_RELEASED, SDL_BUTTON_MIDDLE);
++
++    if (event->flags & DXUI_MOUSE_SCROLL_UP) {
++        SDL_SendMouseWheel(window, 0, 0, 1.0, SDL_MOUSEWHEEL_NORMAL);
++    }
++    if (event->flags & DXUI_MOUSE_SCROLL_DOWN) {
++        SDL_SendMouseWheel(window, 0, 0, -1.0, SDL_MOUSEWHEEL_NORMAL);
++    }
++}
++
++static void onCloseEvent(dxui_window* win) {
++    SDL_Window* window = dxui_get_user_data(win);
++    SDL_SendWindowEvent(window, SDL_WINDOWEVENT_CLOSE, 0, 0);
++    // TODO: The application can simply ignore the event, causing a crash.
++}
++
++static void onResizeEvent(dxui_window* win, dxui_resize_event* event) {
++    SDL_Window* window = dxui_get_user_data(win);
++    SDL_SendWindowEvent(window, SDL_WINDOWEVENT_RESIZED, event->dim.width, event->dim.height);
++}
++
++#endif
+diff -Naur a/src/video/SDL_sysvideo.h b/src/video/SDL_sysvideo.h
+--- a/src/video/SDL_sysvideo.h	2020-12-21 18:44:36.000000000 +0100
++++ b/src/video/SDL_sysvideo.h	2021-06-27 17:20:59.732171054 +0200
+@@ -420,6 +420,7 @@
+ extern VideoBootStrap COCOA_bootstrap;
+ extern VideoBootStrap X11_bootstrap;
+ extern VideoBootStrap DirectFB_bootstrap;
++extern VideoBootStrap Dxui_bootstrap;
+ extern VideoBootStrap WINDOWS_bootstrap;
+ extern VideoBootStrap WINRT_bootstrap;
+ extern VideoBootStrap HAIKU_bootstrap;
+diff -Naur a/src/video/SDL_video.c b/src/video/SDL_video.c
+--- a/src/video/SDL_video.c	2020-12-21 18:44:36.000000000 +0100
++++ b/src/video/SDL_video.c	2021-06-27 17:21:34.412170578 +0200
+@@ -73,6 +73,9 @@
+ #if SDL_VIDEO_DRIVER_DIRECTFB
+     &DirectFB_bootstrap,
+ #endif
++#if SDL_VIDEO_DRIVER_DXUI
++    &Dxui_bootstrap,
++#endif
+ #if SDL_VIDEO_DRIVER_WINDOWS
+     &WINDOWS_bootstrap,
+ #endif

@@ -1,0 +1,37 @@
+diff -Naur a/config.sub b/config.sub
+--- a/config.sub	2021-02-06 07:57:08.000000000 +0100
++++ b/config.sub	2021-05-25 16:18:51.549979989 +0200
+@@ -1700,7 +1700,7 @@
+ 	     | hpux* | unos* | osf* | luna* | dgux* | auroraux* | solaris* \
+ 	     | sym* |  plan9* | psp* | sim* | xray* | os68k* | v88r* \
+ 	     | hiux* | abug | nacl* | netware* | windows* \
+-	     | os9* | macos* | osx* | ios* \
++	     | os9* | macos* | osx* | ios* | cobalt* \
+ 	     | mpw* | magic* | mmixware* | mon960* | lnews* \
+ 	     | amigaos* | amigados* | msdos* | newsos* | unicos* | aof* \
+ 	     | aos* | aros* | cloudabi* | sortix* | twizzler* \
+diff -Naur a/src/chars.c b/src/chars.c
+--- a/src/chars.c	2021-04-23 11:00:23.000000000 +0200
++++ b/src/chars.c	2021-05-25 16:25:01.749993026 +0200
+@@ -23,6 +23,7 @@
+ 
+ #include <ctype.h>
+ #include <string.h>
++#include <strings.h>
+ 
+ #ifdef ENABLE_UTF8
+ #include <wchar.h>
+diff -Naur a/src/files.c b/src/files.c
+--- a/src/files.c	2021-04-29 11:49:46.000000000 +0200
++++ b/src/files.c	2021-05-25 16:25:36.999994256 +0200
+@@ -1458,8 +1458,10 @@
+ 	if (env_dir != NULL)
+ 		tempdir = check_writable_directory(env_dir);
+ 
++#ifdef P_tmpdir
+ 	if (tempdir == NULL)
+ 		tempdir = check_writable_directory(P_tmpdir);
++#endif
+ 
+ 	if (tempdir == NULL)
+ 		tempdir = copy_of("/tmp/");

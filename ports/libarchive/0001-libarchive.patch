@@ -1,0 +1,184 @@
+diff -Naur a/build/autoconf/config.sub b/build/autoconf/config.sub
+--- a/build/autoconf/config.sub	2020-02-11 23:58:02.000000000 +0100
++++ b/build/autoconf/config.sub	2020-04-29 14:18:05.595722410 +0200
+@@ -1368,7 +1368,7 @@
+ 	      | -hpux* | -unos* | -osf* | -luna* | -dgux* | -auroraux* | -solaris* \
+ 	      | -sym* | -kopensolaris* | -plan9* \
+ 	      | -amigaos* | -amigados* | -msdos* | -newsos* | -unicos* | -aof* \
+-	      | -aos* | -aros* | -cloudabi* | -sortix* \
++	      | -aos* | -aros* | -cloudabi* | -sortix* | -cobalt* \
+ 	      | -nindy* | -vxsim* | -vxworks* | -ebmon* | -hms* | -mvs* \
+ 	      | -clix* | -riscos* | -uniplus* | -iris* | -rtu* | -xenix* \
+ 	      | -hiux* | -knetbsd* | -mirbsd* | -netbsd* \
+diff -Naur a/configure b/configure
+--- a/configure	2020-02-11 23:58:01.000000000 +0100
++++ b/configure	2020-04-29 14:16:09.254706929 +0200
+@@ -774,7 +774,6 @@
+ docdir
+ oldincludedir
+ includedir
+-runstatedir
+ localstatedir
+ sharedstatedir
+ sysconfdir
+@@ -885,7 +884,6 @@
+ sysconfdir='${prefix}/etc'
+ sharedstatedir='${prefix}/com'
+ localstatedir='${prefix}/var'
+-runstatedir='${localstatedir}/run'
+ includedir='${prefix}/include'
+ oldincludedir='/usr/include'
+ docdir='${datarootdir}/doc/${PACKAGE_TARNAME}'
+@@ -1138,15 +1136,6 @@
+   | -silent | --silent | --silen | --sile | --sil)
+     silent=yes ;;
+ 
+-  -runstatedir | --runstatedir | --runstatedi | --runstated \
+-  | --runstate | --runstat | --runsta | --runst | --runs \
+-  | --run | --ru | --r)
+-    ac_prev=runstatedir ;;
+-  -runstatedir=* | --runstatedir=* | --runstatedi=* | --runstated=* \
+-  | --runstate=* | --runstat=* | --runsta=* | --runst=* | --runs=* \
+-  | --run=* | --ru=* | --r=*)
+-    runstatedir=$ac_optarg ;;
+-
+   -sbindir | --sbindir | --sbindi | --sbind | --sbin | --sbi | --sb)
+     ac_prev=sbindir ;;
+   -sbindir=* | --sbindir=* | --sbindi=* | --sbind=* | --sbin=* \
+@@ -1284,7 +1273,7 @@
+ for ac_var in	exec_prefix prefix bindir sbindir libexecdir datarootdir \
+ 		datadir sysconfdir sharedstatedir localstatedir includedir \
+ 		oldincludedir docdir infodir htmldir dvidir pdfdir psdir \
+-		libdir localedir mandir runstatedir
++		libdir localedir mandir
+ do
+   eval ac_val=\$$ac_var
+   # Remove trailing slashes.
+@@ -1437,7 +1426,6 @@
+   --sysconfdir=DIR        read-only single-machine data [PREFIX/etc]
+   --sharedstatedir=DIR    modifiable architecture-independent data [PREFIX/com]
+   --localstatedir=DIR     modifiable single-machine data [PREFIX/var]
+-  --runstatedir=DIR       modifiable per-process data [LOCALSTATEDIR/run]
+   --libdir=DIR            object code libraries [EPREFIX/lib]
+   --includedir=DIR        C header files [PREFIX/include]
+   --oldincludedir=DIR     C header files for non-gcc [/usr/include]
+@@ -17989,13 +17977,14 @@
+   return 0;
+ }
+ _ACEOF
+-if ac_fn_c_try_compile "$LINENO"; then :
++if ac_fn_c_try_link "$LINENO"; then :
+ 
+ $as_echo "#define HAVE_READDIR_R 1" >>confdefs.h
+ 
+ 
+ fi
+-rm -f core conftest.err conftest.$ac_objext conftest.$ac_ext
++rm -f core conftest.err conftest.$ac_objext \
++    conftest$ac_exeext conftest.$ac_ext
+ # dirfd can be either a function or a macro.
+ cat confdefs.h - <<_ACEOF >conftest.$ac_ext
+ /* end confdefs.h.  */
+@@ -19003,7 +18992,7 @@
+     We can't simply define LARGE_OFF_T to be 9223372036854775807,
+     since some C++ compilers masquerading as C compilers
+     incorrectly reject 9223372036854775807.  */
+-#define LARGE_OFF_T ((((off_t) 1 << 31) << 31) - 1 + (((off_t) 1 << 31) << 31))
++#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
+   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721
+ 		       && LARGE_OFF_T % 2147483647 == 1)
+ 		      ? 1 : -1];
+@@ -19049,7 +19038,7 @@
+     We can't simply define LARGE_OFF_T to be 9223372036854775807,
+     since some C++ compilers masquerading as C compilers
+     incorrectly reject 9223372036854775807.  */
+-#define LARGE_OFF_T ((((off_t) 1 << 31) << 31) - 1 + (((off_t) 1 << 31) << 31))
++#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
+   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721
+ 		       && LARGE_OFF_T % 2147483647 == 1)
+ 		      ? 1 : -1];
+@@ -19073,7 +19062,7 @@
+     We can't simply define LARGE_OFF_T to be 9223372036854775807,
+     since some C++ compilers masquerading as C compilers
+     incorrectly reject 9223372036854775807.  */
+-#define LARGE_OFF_T ((((off_t) 1 << 31) << 31) - 1 + (((off_t) 1 << 31) << 31))
++#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
+   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721
+ 		       && LARGE_OFF_T % 2147483647 == 1)
+ 		      ? 1 : -1];
+@@ -19118,7 +19107,7 @@
+     We can't simply define LARGE_OFF_T to be 9223372036854775807,
+     since some C++ compilers masquerading as C compilers
+     incorrectly reject 9223372036854775807.  */
+-#define LARGE_OFF_T ((((off_t) 1 << 31) << 31) - 1 + (((off_t) 1 << 31) << 31))
++#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
+   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721
+ 		       && LARGE_OFF_T % 2147483647 == 1)
+ 		      ? 1 : -1];
+@@ -19142,7 +19131,7 @@
+     We can't simply define LARGE_OFF_T to be 9223372036854775807,
+     since some C++ compilers masquerading as C compilers
+     incorrectly reject 9223372036854775807.  */
+-#define LARGE_OFF_T ((((off_t) 1 << 31) << 31) - 1 + (((off_t) 1 << 31) << 31))
++#define LARGE_OFF_T (((off_t) 1 << 62) - 1 + ((off_t) 1 << 62))
+   int off_t_is_large[(LARGE_OFF_T % 2147483629 == 721
+ 		       && LARGE_OFF_T % 2147483647 == 1)
+ 		      ? 1 : -1];
+diff -Naur a/configure.ac b/configure.ac
+--- a/configure.ac	2020-02-11 23:57:58.000000000 +0100
++++ b/configure.ac	2020-04-29 14:16:04.194662734 +0200
+@@ -662,7 +662,7 @@
+ 
+ # There are several variants of readdir_r around; we only
+ # accept the POSIX-compliant version.
+-AC_COMPILE_IFELSE(
++AC_LINK_IFELSE(
+  [AC_LANG_PROGRAM([[#include <dirent.h>]],
+                   [[DIR *dir; struct dirent e, *r;
+ 		    return(readdir_r(dir, &e, &r));]])],
+diff -Naur a/libarchive/archive_entry.h b/libarchive/archive_entry.h
+--- a/libarchive/archive_entry.h	2020-02-11 23:57:58.000000000 +0100
++++ b/libarchive/archive_entry.h	2020-04-29 14:48:53.855816507 +0200
+@@ -41,6 +41,7 @@
+  */
+ 
+ #include <sys/types.h>
++#include <sys/stat.h>
+ #include <stddef.h>  /* for wchar_t */
+ #include <stdint.h>
+ #include <time.h>
+@@ -181,14 +182,14 @@
+  * In libarchive 4.0, we can drop the casts here.
+  * They're needed to work around Borland C's broken mode_t.
+  */
+-#define AE_IFMT		((__LA_MODE_T)0170000)
+-#define AE_IFREG	((__LA_MODE_T)0100000)
+-#define AE_IFLNK	((__LA_MODE_T)0120000)
+-#define AE_IFSOCK	((__LA_MODE_T)0140000)
+-#define AE_IFCHR	((__LA_MODE_T)0020000)
+-#define AE_IFBLK	((__LA_MODE_T)0060000)
+-#define AE_IFDIR	((__LA_MODE_T)0040000)
+-#define AE_IFIFO	((__LA_MODE_T)0010000)
++#define AE_IFMT		((__LA_MODE_T)S_IFMT)
++#define AE_IFREG	((__LA_MODE_T)S_IFREG)
++#define AE_IFLNK	((__LA_MODE_T)S_IFLNK)
++#define AE_IFSOCK	((__LA_MODE_T)S_IFSOCK)
++#define AE_IFCHR	((__LA_MODE_T)S_IFCHR)
++#define AE_IFBLK	((__LA_MODE_T)S_IFBLK)
++#define AE_IFDIR	((__LA_MODE_T)S_IFDIR)
++#define AE_IFIFO	((__LA_MODE_T)S_IFIFO)
+ 
+ /*
+  * Symlink types
+diff -Naur a/libarchive/archive_ppmd7.c b/libarchive/archive_ppmd7.c
+--- a/libarchive/archive_ppmd7.c	2020-01-16 22:05:41.000000000 +0100
++++ b/libarchive/archive_ppmd7.c	2020-04-29 14:19:13.566315135 +0200
+@@ -4,7 +4,7 @@
+ 
+ #include "archive_platform.h"
+ 
+-#include <memory.h>
++#include <string.h>
+ 
+ #include "archive_ppmd7_private.h"
+ 

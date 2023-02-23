@@ -1,0 +1,16 @@
+diff -Naur a/filename.c b/filename.c
+--- a/filename.c	2021-06-03 19:45:48.000000000 +0200
++++ b/filename.c	2022-06-24 20:30:28.641199347 +0200
+@@ -800,9 +800,9 @@
+ 	char *path;
+ {
+ #if HAVE_REALPATH
+-	char rpath[PATH_MAX];
+-	if (realpath(path, rpath) != NULL)
+-		return (save(rpath));
++	char* rpath = realpath(path, NULL);
++	if (rpath != NULL)
++		return rpath;
+ #endif
+ 	return (save(path));
+ }

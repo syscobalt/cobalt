@@ -1,0 +1,172 @@
+From 429987d319810ff1b7a2c77605602d819be51882 Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?Dennis=20W=C3=B6lfing?= <denniswoelfing@gmx.de>
+Date: Fri, 6 Nov 2020 15:27:16 +0100
+Subject: [PATCH] Port to Dennix/Cobalt.
+
+---
+ bim.c | 61 +++++++++++++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 45 insertions(+), 16 deletions(-)
+
+diff --git a/bim.c b/bim.c
+index c4bef82..5be70d6 100644
+--- a/bim.c
++++ b/bim.c
+@@ -479,8 +479,10 @@ FILE * open_biminfo(void) {
+ 	}
+ 
+ 	/* biminfo lives at ~/.biminfo */
+-	char biminfo_path[PATH_MAX+1] = {0};
+-	sprintf(biminfo_path,"%s/.biminfo",home);
++	char* biminfo_path;
++	if (asprintf(&biminfo_path,"%s/.biminfo",home) < 0) {
++		return NULL;
++	}
+ 
+ 	/* Try to open normally first... */
+ 	FILE * biminfo = fopen(biminfo_path,"r+");
+@@ -488,6 +490,7 @@ FILE * open_biminfo(void) {
+ 		/* Otherwise, try to create it. */
+ 		biminfo = fopen(biminfo_path,"w+");
+ 	}
++	free(biminfo_path);
+ 	return biminfo;
+ }
+ 
+@@ -499,22 +502,30 @@ int fetch_from_biminfo(buffer_t * buf) {
+ 	if (!buf->file_name) return 1;
+ 
+ 	/* Get the absolute name of the file */
+-	char tmp_path[PATH_MAX+2];
+-	if (!realpath(buf->file_name, tmp_path)) {
++	char* tmp = realpath(buf->file_name, NULL);
++	if (!tmp) {
++		return 1;
++	}
++	char* tmp_path;
++	if (asprintf(&tmp_path, "%s ", tmp) < 0) {
++		free(tmp);
+ 		return 1;
+ 	}
+-	strcat(tmp_path," ");
++	free(tmp);
+ 
+ 	FILE * biminfo = open_biminfo();
+-	if (!biminfo) return 1;
++	if (!biminfo) {
++		free(tmp_path);
++		return 1;
++	}
+ 
+ 	/* Scan */
+-	char line[PATH_MAX+64];
++	char line[4096+64];
+ 
+ 	while (!feof(biminfo)) {
+ 		fpos_t start_of_line;
+ 		fgetpos(biminfo, &start_of_line);
+-		fgets(line, PATH_MAX+63, biminfo);
++		fgets(line, 4096+63, biminfo);
+ 		if (line[0] != '>') {
+ 			continue;
+ 		}
+@@ -527,10 +538,12 @@ int fetch_from_biminfo(buffer_t * buf) {
+ 			if (buf->line_no > buf->line_count) buf->line_no = buf->line_count;
+ 			if (buf->col_no > buf->lines[buf->line_no-1]->actual) buf->col_no = buf->lines[buf->line_no-1]->actual;
+ 			try_to_center();
++			free(tmp_path);
+ 			return 0;
+ 		}
+ 	}
+ 
++	free(tmp_path);
+ 	return 0;
+ }
+ 
+@@ -541,22 +554,30 @@ int update_biminfo(buffer_t * buf) {
+ 	if (!buf->file_name) return 1;
+ 
+ 	/* Get the absolute name of the file */
+-	char tmp_path[PATH_MAX+1];
+-	if (!realpath(buf->file_name, tmp_path)) {
++	char* tmp = realpath(buf->file_name, NULL);
++	if (!tmp) {
+ 		return 1;
+ 	}
+-	strcat(tmp_path," ");
++	char* tmp_path;
++	if (asprintf(&tmp_path, "%s ", tmp) < 0) {
++		free(tmp);
++		return 1;
++	}
++	free(tmp);
+ 
+ 	FILE * biminfo = open_biminfo();
+-	if (!biminfo) return 1;
++	if (!biminfo) {
++		free(tmp_path);
++		return 1;
++	}
+ 
+ 	/* Scan */
+-	char line[PATH_MAX+64];
++	char line[4096+64];
+ 
+ 	while (!feof(biminfo)) {
+ 		fpos_t start_of_line;
+ 		fgetpos(biminfo, &start_of_line);
+-		fgets(line, PATH_MAX+63, biminfo);
++		fgets(line, 4096+63, biminfo);
+ 		if (line[0] != '>') {
+ 			continue;
+ 		}
+@@ -581,6 +602,7 @@ int update_biminfo(buffer_t * buf) {
+ 
+ _done:
+ 	fclose(biminfo);
++	free(tmp_path);
+ 	return 0;
+ }
+ 
+@@ -1534,7 +1556,9 @@ void get_initial_termios(void) {
+ 
+ void set_unbuffered(void) {
+ 	struct termios new = old;
++#ifndef __cobalt__
+ 	new.c_iflag &= (~ICRNL) & (~IXON);
++#endif
+ 	new.c_lflag &= (~ICANON) & (~ECHO) & (~ISIG);
+ 	tcsetattr(STDOUT_FILENO, TCSAFLUSH, &new);
+ }
+@@ -3402,8 +3426,8 @@ BIM_ACTION(open_file_from_line, 0,
+ 	}
+ 	*t = '\0';
+ 	/* Normalize */
+-	char tmp_path[PATH_MAX+1];
+-	if (!realpath(tmp, tmp_path)) {
++	char* tmp_path = realpath(tmp, NULL);
++	if (!tmp_path) {
+ 		free(tmp);
+ 		return;
+ 	}
+@@ -3414,6 +3438,7 @@ BIM_ACTION(open_file_from_line, 0,
+ 	buffer_close(old_buffer);
+ 	update_title();
+ 	redraw_all();
++	free(tmp_path);
+ }
+ 
+ int line_matches(line_t * line, char * string) {
+@@ -9775,6 +9800,10 @@ void detect_weird_terminals(void) {
+ 		global_config.can_insert = 1;
+ 		global_config.can_bracketedpaste = 1;
+ 	}
++	if (term && !strcmp(term, "cobalt-16color")) {
++		global_config.can_24bit = 0;
++		global_config.can_256color = 0;
++	}
+ 
+ 	if (!global_config.can_unicode) {
+ 		global_config.tab_indicator = strdup(">");
+-- 
+2.29.2
+
