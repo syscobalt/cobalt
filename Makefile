@@ -26,7 +26,7 @@ LICENSE = $(LICENSES_DIR)/cobalt/LICENSE
 DXPORT = ./ports/dxport --host=$(ARCH)-cobalt --builddir=$(BUILD_DIR)/install-ports
 DXPORT += --sysroot=$(SYSROOT)
 
-all: libc kernel libdxui apps sh utils iso
+all: libc kernel libdxui apps sh utils install-ports iso
 
 apps: $(INCLUDE_DIR) $(LIB_DIR)
 	$(MAKE) -C apps
@@ -89,7 +89,7 @@ $(INITRD): $(SYSROOT)
 	cd $(SYSROOT) && tar cJf ../$(INITRD) --format=ustar *
 
 qemu: $(ISO)
-	qemu-system-$(BASE_ARCH) -cdrom $^ -m 512M -cpu host -enable-kvm
+	qemu-system-$(BASE_ARCH) -cdrom $^ -m 1024M -cpu host -enable-kvm
 
 sh: $(INCLUDE_DIR) $(LIB_DIR)
 	$(MAKE) -C sh
