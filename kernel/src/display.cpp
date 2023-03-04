@@ -24,7 +24,7 @@
 #include <cobalt/kernel/panic.h>
 #include <cobalt/kernel/portio.h>
 #include <cobalt/kernel/process.h>
-#include "../../libdxui/src/cp437.h"
+#include <cobalt/cp437.h>
 
 // Classical VGA font but with the Unicode replacement character at 0xFF.
 asm(".pushsection .rodata\n"

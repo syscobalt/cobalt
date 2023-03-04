@@ -28,7 +28,7 @@ LICENSE = $(LICENSES_DIR)/cobalt/LICENSE
 DXPORT = ./ports/dxport --host=$(ARCH)-cobalt --builddir=$(BUILD_DIR)/install-ports
 DXPORT += --sysroot=$(SYSROOT)
 
-all: libc kernel libdxui apps sh utils iso
+all: libc kernel apps sh utils iso
 
 apps: $(INCLUDE_DIR) $(LIB_DIR)
 	$(MAKE) -C apps
@@ -39,10 +39,7 @@ kernel $(KERNEL): $(INCLUDE_DIR) $(LIB_DIR)
 libc: $(INCLUDE_DIR)
 	$(MAKE) -C libc
 
-libdxui: $(INCLUDE_DIR)
-	$(MAKE) -C libdxui
-
-install-all: install-headers install-libc install-libdxui
+install-all: install-headers install-libc
 install-all: install-apps install-sh install-utils
 
 install-apps:
@@ -51,17 +48,12 @@ install-apps:
 install-headers $(INCLUDE_DIR):
 	$(MAKE) -C kernel install-headers
 	$(MAKE) -C libc install-headers
-	$(MAKE) -C libdxui install-headers
 
 install-libc: $(INCLUDE_DIR)
 	$(MAKE) -C libc install-libs
 
-install-libdxui: $(INCLUDE_DIR)
-	$(MAKE) -C libdxui install-lib
-
 $(LIB_DIR):
 	$(MAKE) -C libc install-libs
-	$(MAKE) -C libdxui install-lib
 
 install-ports $(DXPORT_DIR): $(INCLUDE_DIR) $(LIB_DIR)
 ifneq ($(wildcard ./ports/dxport),)
@@ -129,6 +121,6 @@ distclean:
 	rm -rf build sysroot
 	rm -f *.iso
 
-.PHONY: all apps kernel libc libdxui install-all install-apps
-.PHONY: install-headers install-libc install-libdxui install-ports install-sh
+.PHONY: all apps kernel libc install-all install-apps
+.PHONY: install-headers install-libc install-ports install-sh
 .PHONY: install-toolchain install-utils iso qemu sh utils clean distclean
