@@ -26,7 +26,7 @@ LICENSE = $(LICENSES_DIR)/cobalt/LICENSE
 DXPORT = ./ports/dxport --host=$(ARCH)-cobalt --builddir=$(BUILD_DIR)/install-ports
 DXPORT += --sysroot=$(SYSROOT)
 
-all: libc kernel libdxui apps sh utils install-ports iso
+all: libc kernel libdxui apps sh utils iso
 
 apps: $(INCLUDE_DIR) $(LIB_DIR)
 	$(MAKE) -C apps
@@ -41,7 +41,7 @@ libdxui: $(INCLUDE_DIR)
 	$(MAKE) -C libdxui
 
 install-all: install-headers install-libc install-libdxui
-install-all: install-apps install-sh install-utils install-ports
+install-all: install-apps install-sh install-utils
 
 install-apps:
 	$(MAKE) -C apps install
@@ -98,7 +98,7 @@ utils: $(INCLUDE_DIR) $(LIB_DIR)
 	$(MAKE) -C utils
 
 $(SYSROOT): $(INCLUDE_DIR) $(LIB_DIR) $(BIN_DIR) $(SYSROOT)/usr $(LICENSE)
-$(SYSROOT): $(SYSROOT)/share/fonts/vgafont $(SYSROOT)/home/user $(DXPORT_DIR)
+$(SYSROOT): $(SYSROOT)/share/fonts/vgafont $(SYSROOT)/home/user
 
 $(BIN_DIR):
 	$(MAKE) -C apps install
