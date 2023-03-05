@@ -1,7 +1,7 @@
 From 429987d319810ff1b7a2c77605602d819be51882 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Dennis=20W=C3=B6lfing?= <denniswoelfing@gmx.de>
 Date: Fri, 6 Nov 2020 15:27:16 +0100
-Subject: [PATCH] Port to Dennix/Cobalt.
+Subject: [PATCH] Port to Cobalt/Cobalt.
 
 ---
  bim.c | 61 +++++++++++++++++++++++++++++++++++++++++++----------------

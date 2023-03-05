@@ -4,7 +4,7 @@
  	smul=\E[4m, u6=\E[%i%p1%d;%p2%dR, u7=\E[6n,
  	vpa=\E[%i%p1%dd,
  
-+#### Dennix
++#### Cobalt
 +
 +cobalt-16color|Cobalt terminal with 16 colors,
 +	am, AX, bce, msgr, npc, xenl,
@@ -24,15 +24,15 @@
 +	use=ansi+local, use=ansi+erase, use=ansi+rca, use=ansi+cup,
 +	use=ansi+arrows, use=ecma+index,
 +
-+# The Dennix terminal (except for -16color) always supports 16 million colors.
++# The Cobalt terminal (except for -16color) always supports 16 million colors.
 +# Unfortunately ncurses support for this is far from perfect. Palette colors
 +# and RGB colors share a common namespace. When RGB support is advertised only
 +# 8 palette colors are usable but applications might expect 16 palette colors
 +# instead. Also these 8 palette colors mean that 8 RGB colors are missing.
 +# Really ncurses should add a new capability to select RGB colors without
 +# having to lose the palette colors.
-+# Therefore the dennix entry only uses the 256 palette colors. If you want to
-+# use the RGB colors you can set TERM to dennix-direct.
++# Therefore the cobalt entry only uses the 256 palette colors. If you want to
++# use the RGB colors you can set TERM to cobalt-direct.
 +cobalt|Cobalt terminal,
 +	colors#256, pairs#32767,
 +	setab=\E[48;5;%p1%dm,

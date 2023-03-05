@@ -1,7 +1,7 @@
 From 38f3b22028f675cb0feb35c784c2697a1e87daa0 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?Dennis=20W=C3=B6lfing?= <denniswoelfing@gmx.de>
 Date: Tue, 25 Feb 2020 14:07:56 +0100
-Subject: [PATCH] Port to Dennix.
+Subject: [PATCH] Port to Cobalt.
 
 ---
  Makefile      | 3 +--
