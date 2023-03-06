@@ -1,24 +1,20 @@
-/* Copyright (c) 2020, 2021 Dennis Wölfing
- *
- * Permission to use, copy, modify, and/or distribute this software for any
- * purpose with or without fee is hereby granted, provided that the above
- * copyright notice and this permission notice appear in all copies.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
- * WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
- * ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
- * WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
- * ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
- * OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+/***
+ *                                                                                      
+ *      ,ad8888ba,    ,ad8888ba,    88888888ba         db         88      888888888888  
+ *     d8"'    `"8b  d8"'    `"8b   88      "8b       d88b        88           88       
+ *    d8'           d8'        `8b  88      ,8P      d8'`8b       88           88       
+ *    88            88          88  88aaaaaa8P'     d8'  `8b      88           88       
+ *    88            88          88  88""""""8b,    d8YaaaaY8b     88           88       
+ *    Y8,           Y8,        ,8P  88      `8b   d8""""""""8b    88           88       
+ *     Y8a.    .a8P  Y8a.    .a8P   88      a8P  d8'        `8b   88           88       
+ *      `"Y8888Y"'    `"Y8888Y"'    88888888P"  d8'          `8b  88888888888  88       
+ *  Cobalt is a UNIX-like operating system forked from Dennis Wölfing's Cobalt operating
+ *  system, which can be found at https://github.com/dennis95/cobalt. Cobalt is licensed
+ *  under the ISC license, which can be found at the file called LICENSE at the root
+ *  directory of the project.
  */
 
-/* gui/window.h
- * Window.
- */
-
-#ifndef WINDOW_H
-#define WINDOW_H
+#pragma once
 
 #include "gui.h"
 
@@ -58,17 +54,14 @@ extern struct Window* changingWindow;
 extern struct Window* mouseWindow;
 extern struct Window* topWindow;
 
-struct Window* addWindow(int x, int y, int width, int height, const char* title,
-        int flags, struct Connection* connection);
+struct Window* addWindow(int x, int y, int width, int height, const char* title, int flags, struct Connection* connection);
 int checkMouseInteraction(struct Window* window, dxui_pos pos);
 void closeWindow(struct Window* window);
 dxui_rect getClientRect(struct Window* window);
 void hideWindow(struct Window* window);
 void moveWindowToTop(struct Window* window);
-void redrawWindow(struct Window* window, int width, int height,
-        dxui_color* lfb);
-void redrawWindowPart(struct Window* window, int x, int y, int width,
-        int height, size_t pitch, dxui_color* lfb);
+void redrawWindow(struct Window* window, int width, int height, dxui_color* lfb);
+void redrawWindowPart(struct Window* window, int x, int y, int width, int height, size_t pitch, dxui_color* lfb);
 dxui_color renderClientArea(struct Window* window, int x, int y);
 dxui_color renderWindowDecoration(struct Window* window, int x, int y);
 void resizeClientRect(struct Window* window, dxui_dim dim);
@@ -77,5 +70,3 @@ void setWindowBackground(struct Window* window, dxui_color color);
 void setWindowCursor(struct Window* window, int cursor);
 void setWindowTitle(struct Window* window, const char* title);
 void showWindow(struct Window* window);
-
-#endif
