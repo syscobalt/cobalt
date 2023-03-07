@@ -24,9 +24,7 @@ static dxui_label* about_label1;
 static dxui_label* about_label2;
 
 static bool createWindow(void);
-static void onButtonClick(dxui_control* control, dxui_mouse_event* event);
 static void onExitButtonClick(dxui_control* control, dxui_mouse_event* event);
-static void onKey(dxui_control* control, dxui_key_event* event);
 static void shutdown(void);
 
 /*
@@ -81,7 +79,7 @@ static bool createWindow(void) {
      *  Let's create another label, and put it under the first one, to complete the sentence "The Cobalt operating
      *  system, compiled on <DATE> at <TIME>".
      */
-    rect = (dxui_rect) {{ 10, 35, 390, 50}};
+    rect = (dxui_rect) {{ 10, 35, 390, 25}};
     #define FINISHED_STRING "on " __DATE__ " at " __TIME__
     about_label1 = dxui_create_label(rect, FINISHED_STRING);
     if (!about_label1) return false;
@@ -95,7 +93,7 @@ static bool createWindow(void) {
      *  Let's now create a label a little more below, which contains the link to the Cobalt operating system's GitHub
      *  page.
      */
-    rect = (dxui_rect) {{ 10, 85, 390, 100}};
+    rect = (dxui_rect) {{ 10, 85, 390, 25}};
     about_label2 = dxui_create_label(rect, "https://github.com/syscobalt/cobalt");
     if (!about_label2) return false;
     dxui_set_background(about_label2, COLOR_WHITE);
@@ -110,13 +108,8 @@ static bool createWindow(void) {
         dxui_add_control(window, exit_button);
     }
 
-    dxui_set_event_handler(window, DXUI_EVENT_KEY, onKey);
     dxui_show(window);
     return true;
-}
-
-static void onButtonClick(dxui_control* control, dxui_mouse_event* event) {
-    (void) event;
 }
 
 static void onExitButtonClick(dxui_control* control, dxui_mouse_event* event) {
@@ -124,9 +117,6 @@ static void onExitButtonClick(dxui_control* control, dxui_mouse_event* event) {
     exit(0);
 }
 
-static void onKey(dxui_control* control, dxui_key_event* event) {
-    (void) control;
-}
 
 static void shutdown(void) {
     dxui_shutdown(context);
