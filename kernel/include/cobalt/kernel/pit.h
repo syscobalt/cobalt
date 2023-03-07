@@ -8,7 +8,7 @@
  *    Y8,           Y8,        ,8P  88      `8b   d8""""""""8b    88           88       
  *     Y8a.    .a8P  Y8a.    .a8P   88      a8P  d8'        `8b   88           88       
  *      `"Y8888Y"'    `"Y8888Y"'    88888888P"  d8'          `8b  88888888888  88       
- *  Cobalt is a UNIX-like operating system forked from Dennis Wölfing's Cobalt operating
+ *  Cobalt is a UNIX-like operating system forked from Dennis Wölfing's Dennix operating
  *  system, which can be found at https://github.com/dennis95/cobalt. Cobalt is licensed
  *  under the ISC license, which can be found at the file called LICENSE at the root
  *  directory of the project.
