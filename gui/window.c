@@ -167,8 +167,7 @@ dxui_rect getClientRect(struct Window* window) {
 
 static dxui_rect getCloseButtonRect(struct Window* window) {
     dxui_rect result;
-    result.x = window->rect.x + window->rect.width -
-            (windowCloseButtonSize + windowBorderSize);
+    result.x = window->rect.x + window->rect.width - (windowCloseButtonSize + windowBorderSize);
     result.y = window->rect.y + windowBorderSize;
     result.width = windowCloseButtonSize;
     result.height = windowCloseButtonSize;
@@ -187,10 +186,8 @@ void moveWindowToTop(struct Window* window) {
     addWindowOnTop(window);
 }
 
-void redrawWindow(struct Window* window, int width, int height,
-        dxui_color* lfb) {
-    if (window->clientDim.width != width ||
-            window->clientDim.height != height) {
+void redrawWindow(struct Window* window, int width, int height, dxui_color* lfb) {
+    if (window->clientDim.width != width || window->clientDim.height != height) {
         free(window->lfb);
         window->lfb = malloc(width * height * sizeof(dxui_color));
         if (!window->lfb) dxui_panic(context, "malloc");
@@ -203,10 +200,8 @@ void redrawWindow(struct Window* window, int width, int height,
     }
 }
 
-void redrawWindowPart(struct Window* window, int x, int y, int width,
-        int height, size_t pitch, dxui_color* lfb) {
-    if (x + width > window->clientDim.width ||
-            y + height > window->clientDim.height) {
+void redrawWindowPart(struct Window* window, int x, int y, int width, int height, size_t pitch, dxui_color* lfb) {
+    if (x + width > window->clientDim.width || y + height > window->clientDim.height) {
         return;
     }
 

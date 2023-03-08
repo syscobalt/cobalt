@@ -70,17 +70,14 @@ static void initialize(void) {
         rect.height = 4 * displayDim.height / 5;
     }
 
-    compositorWindow = dxui_create_window(context, rect, "GUI",
-            DXUI_WINDOW_COMPOSITOR);
+    compositorWindow = dxui_create_window(context, rect, "GUI", DXUI_WINDOW_COMPOSITOR);
     if (!compositorWindow) dxui_panic(context, "Failed to create a window");
     dxui_set_background(compositorWindow, backgroundColor);
 
     dxui_set_event_handler(compositorWindow, DXUI_EVENT_MOUSE, handleMouse);
     dxui_set_event_handler(compositorWindow, DXUI_EVENT_KEY, handleKey);
-    dxui_set_event_handler(compositorWindow, DXUI_EVENT_WINDOW_RESIZED,
-            handleResize);
-    dxui_set_event_handler(compositorWindow, DXUI_EVENT_WINDOW_CLOSE,
-            handleClose);
+    dxui_set_event_handler(compositorWindow, DXUI_EVENT_WINDOW_RESIZED, handleResize);
+    dxui_set_event_handler(compositorWindow, DXUI_EVENT_WINDOW_CLOSE, handleClose);
 
     guiDim = rect.dim;
     lfb = dxui_get_framebuffer(compositorWindow, guiDim);
