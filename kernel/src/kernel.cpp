@@ -51,15 +51,11 @@ extern "C" void kmain(uint32_t /*magic*/, paddr_t multibootAddress) {
     // memory.
     vaddr_t multibootMapping;
     size_t mapSize;
-    const multiboot_info* multiboot = (const multiboot_info*)
-            kernelSpace->mapUnaligned(multibootAddress, sizeof(multiboot_info),
-            PROT_READ, multibootMapping, mapSize);
+    const multiboot_info* multiboot = (const multiboot_info*) kernelSpace->mapUnaligned(multibootAddress, sizeof(multiboot_info), PROT_READ, multibootMapping, mapSize);
     size_t multibootInfoSize = multiboot->total_size;
     kernelSpace->unmapPhysical(multibootMapping, mapSize);
 
-    multiboot = (const multiboot_info*)
-            kernelSpace->mapUnaligned(multibootAddress, multibootInfoSize,
-            PROT_READ, multibootMapping, mapSize);
+    multiboot = (const multiboot_info*) kernelSpace->mapUnaligned(multibootAddress, multibootInfoSize, PROT_READ, multibootMapping, mapSize);
 
     Log::earlyInitialize(multiboot);
     // Kernel panic works after this point.
