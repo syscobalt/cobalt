@@ -35,3 +35,47 @@ Others who created code which can be found here are listed aswell:
 ## Ports
 There is a subfolder called `ports`, which uses a port manager made for [cobalt](https://github.com/dennis95/cobalt) that is compatible with Cobalt. Most of these ports have been made for Cobalt, but were slightly modified to work with Cobalt.
 These ports are optional, but you most likely will want to have them included. To include these ports, simply run `make install-ports`, which will build all of the ports inside of the `ports` subfolder. If you don't want certain ports built, simply remove them from the `ports` subfolder. After that, you can run `make` again.
+## Checklist
+### Driver checklist
+- [X] PS/2 Keyboard driver
+- [X] PS/2 Mouse driver
+- [ ] 3c90x driver
+- [ ] Intel 8254x
+- [ ] Ne2000
+- [ ] RTL8139
+- [ ] RTL8169
+- [ ] Intel Ethernet i217
+- [ ] AMD PCnet
+### Ports checklist
+- [X] GNU Awk
+- [X] bim
+- [X] Binutils
+- [X] dxcompress
+- [X] GNU Compiler Collection
+- [X] gettext
+- [X] grep
+- [X] grub2
+- [X] less
+- [X] libSDL2
+- [X] libarchive
+- [X] libgmp
+- [X] libiconv
+- [X] libzma
+- [X] libmpc
+- [X] libmpfr
+- [X] libstdc++
+- [X] libz
+- [X] GNU Make
+- [X] GNU Nano
+- [X] ncurses
+- [X] nyancat
+- [X] sed
+- [ ] Wayland
+- [ ] fbDOOM
+## Architecture checklist
+- [X] x86
+- [X] x86_64
+- [ ] ARM
+- [ ] ARM64
+- [ ] PowerPC
+- [ ] PowerPC64
