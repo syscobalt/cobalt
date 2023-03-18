@@ -9,21 +9,29 @@
 #include <sys/socket.h>
 #include <sys/un.h>
 #include <cobalt/display.h>
-#include <cobalt/mouse.h>
 #include <stdio.h>
+#include <signal.h>
 
 #include "context.h"
 #include "color.h"
 
 __context* context;
 
+/*
+ *  Currently, we're having issues drawing to the framebuffer, if you know how to fix this, you may submit a pull request fixing this issue.
+ */
+
 int main()
 {
+    signal(SIGINT, SIG_IGN);
+    signal(SIGPIPE, SIG_IGN);
+    signal(SIGQUIT, SIG_IGN);
+
     context = calloc(1, sizeof(__context));
     if (!context)
         return -1;
     
-    context->display_fd = open("/dev/display", O_RDONLY | O_CLOEXEC);
+    context->display_fd = open("/dev/display", O_RDWR | O_CLOEXEC);
     if (context->display_fd < 0) {
         free(context);
         return -1;
@@ -66,8 +74,8 @@ int main()
     /*
      *  I think we can start drawing now...
      */
-    
-    /*for(int x = 0; x <= 100; x++)
+
+    for(int x = 0; x <= 100; x++)
     {
         for(int y = 0; y <= 100; y++)
         {
@@ -85,12 +93,14 @@ int main()
     draw.draw_width = 100;
     draw.draw_height = 100;
 
-    posix_devctl(context->display_fd, DISPLAY_DRAW, &draw, sizeof(draw), NULL);*/
+    posix_devctl(context->display_fd, DISPLAY_DRAW, &draw, sizeof(draw), NULL);
 
     for (int i = 0; i < context->display_width * context->display_height; i++) {
         //printf("debug: i should be drawing...\n");
         context->framebuffer[i] = RGB(255, 255, 255);
     }
+
+    getchar();
 
     printf("success: everything went right!\n");
     return 0;

@@ -38,8 +38,7 @@ GraphicsDriver* graphicsDriver;
 static const size_t charHeight = 16;
 static const size_t charWidth = 9;
 
-Display::Display(video_mode mode, char* buffer, size_t pitch)
-        : Vnode(S_IFCHR | 0666, DevFS::dev) {
+Display::Display(video_mode mode, char* buffer, size_t pitch) : Vnode(S_IFCHR | 0666, DevFS::dev) {
     this->buffer = buffer;
     this->mode = mode;
     if (mode.video_bpp == 0) {
