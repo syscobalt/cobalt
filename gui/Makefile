@@ -1,16 +1,18 @@
-# Copyright (c) 2020, 2021, 2022 Dennis Wölfing
 #
-# Permission to use, copy, modify, and/or distribute this software for any
-# purpose with or without fee is hereby granted, provided that the above
-# copyright notice and this permission notice appear in all copies.
+#                                                                                      
+#      ,ad8888ba,    ,ad8888ba,    88888888ba         db         88      888888888888  
+#     d8"'    `"8b  d8"'    `"8b   88      "8b       d88b        88           88       
+#    d8'           d8'        `8b  88      ,8P      d8'`8b       88           88       
+#    88            88          88  88aaaaaa8P'     d8'  `8b      88           88       
+#    88            88          88  88""""""8b,    d8YaaaaY8b     88           88       
+#    Y8,           Y8,        ,8P  88      `8b   d8""""""""8b    88           88       
+#     Y8a.    .a8P  Y8a.    .a8P   88      a8P  d8'        `8b   88           88       
+#      `"Y8888Y"'    `"Y8888Y"'    88888888P"  d8'          `8b  88888888888  88       
+#  Cobalt is a UNIX-like operating system forked from Dennis Wölfing's Dennix operating
+#  system, which can be found at https://github.com/dennis95/cobalt. Cobalt is licensed
+#  under the ISC license, which can be found at the file called LICENSE at the root
+#  directory of the project.
 #
-# THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES
-# WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF
-# MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR
-# ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES
-# WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
-# ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
-# OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 REPO_ROOT = ..
 
@@ -24,23 +26,9 @@ BUILD = $(BUILD_DIR)/gui
 CFLAGS ?= -O2 -g
 CFLAGS += --sysroot=$(SYSROOT) -fstack-protector-strong -Wall -Wextra
 CPPFLAGS += -D_COBALT_SOURCE -DCOBALT_VERSION=\"$(VERSION)\"
-LIBS = -ldxui
 
 OBJ = \
-	connection.o \
-	display.o \
-	gui.o \
-	keyboard.o \
-	mouse.o \
-	server.o \
-	window.o
-
-CURSORS = \
-	arrow.rgba \
-	resize_diagonal1.rgba \
-	resize_diagonal2.rgba \
-	resize_horizontal.rgba \
-	resize_vertical.rgba
+	main.o
 
 all: $(BUILD)/gui
 
@@ -49,13 +37,11 @@ OBJ := $(addprefix $(BUILD)/, $(OBJ))
 
 install: $(BUILD)/gui
 	@mkdir -p $(BIN_DIR)
-	cp -f $(BUILD)/gui $(BIN_DIR)
-	@mkdir -p $(SYSROOT)/share/cursors
-	cp -f $(CURSORS) $(SYSROOT)/share/cursors
+	cp -f $^ $(BIN_DIR)
 	touch $(SYSROOT)
 
 $(BUILD)/gui: $(OBJ)
-	$(CC) -o $@ $^ $(LIBS)
+	$(CC) -o $@ $^
 
 $(BUILD)/%.o: %.c
 	@mkdir -p $(BUILD)
