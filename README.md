@@ -6,7 +6,7 @@ Author: "Falkosc223, Dashbloxx"
 ## Screenshot
 ![image](.assets/Screenshot_20230318_152920.png)
 ## What is Cobalt?
-Cobalt is a UNIX-like operating system that is designed for speed, and compability. Cobalt is nearly compatible with most programs made for UNIX-like systems. Cobalt contains code from Dennix & Sortix.
+Cobalt is a UNIX-like operating system that is designed for speed, and compability. Cobalt is nearly compatible with most programs made for UNIX-like systems. Cobalt contains code from [dennix](https://github.com/dennis95/dennix) & [sortix](https://sortix.org/) .
 ## How can I build Cobalt?
 To build Cobalt, you will need to build the toolchain first. Start by running the command:
 ```
@@ -33,7 +33,7 @@ For guidelines on contributing, see [this](CONTRIBUTING.md) page. A list of cont
 Others who created code which can be found here are listed aswell:
 * [dennis95](https://github.com/dennis95)
 ## Ports
-There is a subfolder called `ports`, which uses a port manager made for [dennix](https://github.com/dennis95/dennix) that is compatible with Cobalt. Most of these ports have been made for Cobalt, but were slightly modified to work with Cobalt.
+There is a subfolder called `ports`, which uses a port manager made for [dennix](https://github.com/dennis95/dennix) which works with Cobalt. Most of these ports have been made for Cobalt, but were slightly modified to work with Cobalt.
 These ports are optional, but you most likely will want to have them included. To include these ports, simply run `make install-ports`, which will build all of the ports inside of the `ports` subfolder. If you don't want certain ports built, simply remove them from the `ports` subfolder. After that, you can run `make` again.
 ## Checklist
 ### Driver checklist
