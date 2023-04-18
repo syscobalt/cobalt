@@ -1,4 +1,4 @@
-# Introduction
+# Introduction (Deprecated)
 You may be able to port X11 or Wayland to Cobalt, but you can also use the native GUI system, which has been retained when Cobalt was forked from Dennix. This subdirectory will try to document Dennix's GUI system and libdxui.
 First of all, all graphical applications that are to run on Cobalt/Dennix's native GUI system will most likely require libdxui, which provides GUI-related support. Although the native GUI system isn't needed to run GUI applications that use libdxui (they can run regularly on the framebuffer), this documentation will assume you're developing with libdxui for the native GUI system.
 ## Getting started

@@ -1,4 +1,4 @@
-# Labels
+# Labels (Deprecated)
 When creating GUIs, you may want to display some text. This is where labels come in handy.
 To create labels,  simply define them using their type, set their text & size, and them add the label to the window.
 Here is a more detailed example:
